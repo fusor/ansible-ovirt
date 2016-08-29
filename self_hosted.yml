@@ -2,12 +2,10 @@
 
 - hosts: self_hosted_first_host
   roles:
-    - satellite
     - self_hosted_first_host
     - datacenter
     - storage
 
 - hosts: self_hosted_additional_host:
   roles:
-    - satellite
     - self_hosted_additional_host

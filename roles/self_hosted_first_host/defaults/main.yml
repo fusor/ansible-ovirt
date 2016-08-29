@@ -1,0 +1,28 @@
+---
+
+# self-hosted-answers
+engine_fqdn: rhev-engine.example.com
+gateway: '192.168.1.1'
+cluster_name: Default
+storageDatacenterName: hosted_storage
+storage_domain_type: nfs
+storage_type: nfs3
+hosted_storage_name: my_hosted_storage
+hosted_storage_addrees: www.example.com
+hosted_storage_path: /path/to/storage
+mac_address: '11:22:33:44:55:66'
+engine_mac_address: '00:11:22:33:44:55'
+cpu_model: model_Nehalem
+root_password: changeme
+admin_password: changeme
+
+
+# user-data
+engine_db_host: www.example.com
+engine_db_user: root
+engine_db_port: 5432
+engine_db_password: dbpassword
+satellite_fqdn: satellite.example.com
+engine_activation_key: 1-22222-33333
+engine_organization: localdomain
+engine_application_mode: virt

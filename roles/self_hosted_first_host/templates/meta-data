@@ -1,0 +1,2 @@
+instance-id: 02a275f0-4913-4133-b2f4-b7a7ab8f5074
+local-hostname: {{ engine_fqdn }}
