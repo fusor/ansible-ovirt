@@ -1,0 +1,16 @@
+---
+
+- hosts: engine
+  roles:
+    - satellite
+    - engine
+    - datacenter
+
+- hosts: hypervisor
+  roles:
+    - satellite
+    - hypervisor
+
+- hosts: engine
+  roles:
+    - storage
