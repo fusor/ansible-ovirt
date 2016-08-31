@@ -5,14 +5,9 @@ script_dir: /etc/qci/scripts/
 engine_fqdn: rhev-engine.example.com
 engine_username: admin
 admin_password: changeme
+
 dc_name: Default
-
-data_storage_name: my_data_storage
-data_storage_address: www.example.com
-data_storage_path: /path/to/data
-
-export_storage_name: my_export_storage
-export_storage_address: www.example.com
-export_storage_path: /path/to/export
-
-deploy_cfme: false
+cluster_name: Default
+cpu_type: Intel Nehalem Family
+mac_address_range: ''
+mac_pool_name: ''

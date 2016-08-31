@@ -1,0 +1,155 @@
+#! /usr/bin/env python
+
+import time
+from ovirtsdk.api import API
+from ovirtsdk.xml import params
+from ovirtsdk.infrastructure.errors import RequestError
+
+VERSION = params.Version(major='3', minor='6')
+
+
+def main():
+    args = parse_args()
+    engine_api = get_api(
+        url=args.url,
+        user=args.username,
+        password=args.password,
+        insecure=True, timeout=600
+    )
+
+    print "Creating DataCenter"
+    datacenter = create_datacenter(engine_api, args.dc_name)
+    if args.mac_address_range and args.mac_pool_name:
+        print('Creating mac address pool')
+        mac_pool = create_mac_pool(
+            engine_api,
+            args.mac_pool_name,
+            args.mac_address_range
+        )
+        assign_mac_pool(datacenter, mac_pool)
+    print("Creating Cluster")
+    create_cluster(engine_api, datacenter, args.cluster_name, args.cpu_type)
+
+
+def parse_args():
+    from optparse import OptionParser
+    parser = OptionParser()
+
+    parser.add_option('--url', dest='url',
+                      help='the url for the Engine api')
+    parser.add_option('--username', dest='username',
+                      help='the username for the Engine api')
+    parser.add_option('--password', dest='password',
+                      help='the password for the Engine api')
+    parser.add_option('--name', dest='dc_name',
+                      help='the name of the datacenter')
+    parser.add_option('--cluster-name', dest='cluster_name',
+                      help='the name of the cluster')
+    parser.add_option('--cpu-type', dest='cpu_type',
+                      help='the cpu type for the cluster')
+    parser.add_option('--mac-address-range', dest='mac_address_range',
+                      help='a mac address range in the form start,end')
+    parser.add_option('--mac-pool-name', dest='mac_pool_name',
+                      help='the name of a custom mac address pool')
+    (options, args) = parser.parse_args()
+
+    if not all(options.__dict__.values()):
+        print('Not all required options were provided')
+        actual = [key for (key, value) in options.__dict__.items() if value]
+        print('Got: {}'.format(', '.join(actual)))
+        print('Expected: {}'.format(', '.join(options.__dict__.keys())))
+        exit(1)
+    return options
+
+
+def get_api(url=None, user=None, password=None, insecure=False, timeout=30):
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            return API(
+                url=url,
+                username=user,
+                password=password,
+                insecure=insecure
+            )
+        except Exception:
+            time.sleep(10)
+
+
+def create_datacenter(engine_api, name):
+    dc_params = params.DataCenter(
+        name=name,
+        storage_type='nfs',
+        version=VERSION
+    )
+    try:
+        return (engine_api.datacenters.get(name=name) or
+                engine_api.datacenters.add(dc_params))
+    except Exception as e:
+        print 'Failed to create NFS Data Center:\n%s' % str(e)
+        exit(1)
+
+
+def create_mac_pool(engine_api, mac_pool_name, mac_address_range):
+    try:
+        start, end = mac_address_range.split(',')
+    except Exception:
+        print('Mac address range specified in an invalid format')
+        exit(1)
+
+    ranges = params.Ranges(range=[params.Range(from_=start, to=end)])
+
+    mac_pool_params = params.MacPool(
+        name=mac_pool_name,
+        description='Mac address pool generated for QCI deployment',
+        ranges=ranges
+    )
+
+    try:
+        return (engine_api.macpools.get(name=mac_pool_name) or
+                engine_api.macpools.add(mac_pool_params))
+    except RequestError as e:
+        print('Error creating mac address pool')
+        print(e.detail)
+        exit(1)
+
+
+def assign_mac_pool(datacenter, pool):
+    for _ in range(6):
+        try:
+            datacenter.set_mac_pool(pool)
+            datacenter.update()
+            print('Successfully attached mac address pool to Datacenter')
+            break
+        except Exception as e:
+            time.sleep(10)
+    else:
+        print('Failed to assign mac address pool to Datacenter')
+        print(e.detail)
+        exit(1)
+
+
+def create_cluster(engine_api, datacenter, cluster_name, cpu_type):
+    cpu_params = params.CPU(id=cpu_type)
+    cluster_params = params.Cluster(
+        name=cluster_name,
+        cpu=cpu_params,
+        data_center=datacenter,
+        version=VERSION
+    )
+    try:
+        cluster = engine_api.clusters.get(name=cluster_name)
+        if cluster:
+            print 'Cluster: ' + cluster.name + ' already exists'
+            print "Setting CPU type to '%s'" % cpu_type
+            cluster.set_cpu(cpu_params)
+            cluster.update()
+        elif engine_api.clusters.add(cluster_params):
+            print 'Cluster was created successfully'
+    except Exception as e:
+        print 'Failed to create Cluster:\n%s' % str(e)
+        exit(1)
+
+
+if __name__ == '__main__':
+    main()
