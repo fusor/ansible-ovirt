@@ -1,0 +1,14 @@
+---
+
+- name: ensure the script directory exists
+  file: 
+    path: '{{ script_dir }}'
+    state: directory
+    recurse: yes
+    mode: 0600
+
+- name: copy storage setup script
+  copy:
+    src: files/datacenter_configuration
+    dest: '{{ script_dir }}/datacenter_configuration'
+    mode: 0700

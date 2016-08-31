@@ -1,94 +1,93 @@
 ---
 
-tasks:
-  - name: Install dependences (~2GB)
-    yum: name={{ item }} state=present
-    with_items:
-        - genisoimage
-        - rhevm-appliance
-        - glusterfs-fuse
-        - ovirt-hosted-engine-setup
+- name: Install dependences (~2GB)
+  yum: name={{ item }} state=present
+  with_items:
+      - genisoimage
+      - rhevm-appliance
+      - glusterfs-fuse
+      - ovirt-hosted-engine-setup
 
-  - name: Stop and disable NetworkManager
-    service:
-        name: NetworkManager
-        enabled: no
-        state: stopped
+- name: Stop and disable NetworkManager
+  service:
+      name: NetworkManager
+      enabled: no
+      state: stopped
 
-  - name: Create qemu group
-    group:
-        name: qemu
-        state: present
-        system: yes
+- name: Create qemu group
+  group:
+      name: qemu
+      state: present
+      system: yes
 
-  - name: Create qemu user
-    user:
-        name: qemu
-        group: qemu
-        createhome: no
-        system: yes
+- name: Create qemu user
+  user:
+      name: qemu
+      group: qemu
+      createhome: no
+      system: yes
 
 
-  - name: Find the path to the appliance image
-    shell: find /usr/share/ovirt-engine-appliance -name 'rhevm-appliance-*.ova'
-    register: rhevm_appliance
+- name: Find the path to the appliance image
+  shell: find /usr/share/ovirt-engine-appliance -name 'rhevm-appliance-*.ova'
+  register: rhevm_appliance
 
-  - name: get the provisioning nic for the machine
-    shell: ip addr | grep -Pzo '^[0-9]+:(.*):.*\\n.*{{ mac_address }}.*' | sed -r -n 's/[0-9]+: (.*):.*/\1/p' | head -n1 | xargs -I NIC echo 'OVEHOSTED_NETWORK/bridgeIf=str:NIC' >> /etc/qci/answers
-    register: provisioning_nic
+- name: get the provisioning nic for the machine
+  shell: ip addr | grep -Pzo '^[0-9]+:(.*):.*\\n.*{{ mac_address }}.*' | sed -r -n 's/[0-9]+: (.*):.*/\1/p' | head -n1 | xargs -I NIC echo 'OVEHOSTED_NETWORK/bridgeIf=str:NIC' >> /etc/qci/answers
+  register: provisioning_nic
 
-  - name: create qci directory
-    file:
-        path: /etc/qci
-        state: directory
-        mode: 0600
-        user: qemu
-        group: qemu
+- name: create qci directory
+  file:
+      path: /etc/qci
+      state: directory
+      mode: 0600
+      user: qemu
+      group: qemu
 
-  - name: Get the answer file over there
-    template:
-        src: templates/answers
-        dest: /etc/qci/answers
-        mode: 0600
+- name: Get the answer file over there
+  template:
+      src: templates/answers
+      dest: /etc/qci/answers
+      mode: 0600
 
-  - name: Create cloud init temp directory
-    file:
-        path: '/etc/qci/cloud_init'
-        state: directory
-        mode: 0600
-        user: qemu
-        group: qemu
+- name: Create cloud init temp directory
+  file:
+      path: '/etc/qci/cloud_init'
+      state: directory
+      mode: 0600
+      user: qemu
+      group: qemu
 
-  - name: Copy over the cloud init data
-    template:
-        src: '{{ item.src }}'
-        dest: '{{ item.dest }}'
-        owner: qemu
-        group: qemu
-        mode: 0600
-    with_items:
-      - { src: templates/user-data, dest: /etc/qci/cloud_init/user-data }
-      - { src: templates/meta-data, dest: /etc/qci/cloud_init/meta-data }
+- name: Copy over the cloud init data
+  template:
+      src: '{{ item.src }}'
+      dest: '{{ item.dest }}'
+      owner: qemu
+      group: qemu
+      mode: 0600
+  with_items:
+    - { src: templates/user-data, dest: /etc/qci/cloud_init/user-data }
+    - { src: templates/meta-data, dest: /etc/qci/cloud_init/meta-data }
 
-  - name: Generate cloud-init iso
-    shell: genisoimage -output '/etc/qci/cloud_init/cloud.iso' -volid cidata -joliet -rock -input-charset utf-8  '/etc/qci/cloud_init/meta-data' '/etc/qci/cloud_init/user-data'
+- name: Generate cloud-init iso
+  shell: genisoimage -output '/etc/qci/cloud_init/cloud.iso' -volid cidata -joliet -rock -input-charset utf-8  '/etc/qci/cloud_init/meta-data' '/etc/qci/cloud_init/user-data'
 
-  - name: Fix permissions on iso
-    file:
-        name: /etc/qci/cloud_init/cloud.iso
-        group: qemu
-        owner: qemu
-        state: file
-        mode: 0600
+- name: Fix permissions on iso
+  file:
+      name: /etc/qci/cloud_init/cloud.iso
+      group: qemu
+      owner: qemu
+      state: file
+      mode: 0600
 
-  - name: Execute hosted-engine setup
-    shell: hosted-engine --deploy --config-append=/etc/qci/answers
-    async: 12000
-    poll: 30
+- name: Execute hosted-engine setup
+  shell: hosted-engine --deploy --config-append=/etc/qci/answers
+  async: 12000
+  poll: 30
 
-  - name: Wait for the engine to come up
-    wait_for:
-        host: '{{ engine_fqdn }}'
-        port: 22
-        delay: 30
-        timeout: 600
+- name: Wait for the engine to come up
+  wait_for:
+      host: '{{ engine_fqdn }}'
+      port: 22
+      delay: 30
+      timeout: 600

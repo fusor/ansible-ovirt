@@ -1,0 +1,37 @@
+---
+
+- name: ensure the script directory exists
+  file: 
+    path: '{{ script_dir }}'
+    state: directory
+    recurse: yes
+    mode: 0600
+
+- name: copy storage setup script
+  copy:
+    src: files/storage_setup
+    dest: '{{ script_dir }}/storage_setup'
+    mode: 0700
+
+- name: Set up data domain
+  shell: >
+    /qci/storage_setup  --url={{ engine_fqdn }}
+                        --username={{ engine_username }} 
+                        --password={{ admin_password }}
+                        --datacenter={{ dc_name }}
+                        --storage-name={{ data_storage_name }}
+                        --storage-path={{ data_storage_path }}
+                        --storage-address={{ data_storage_address }}
+                        --storage-type='data'
+
+- name: Set up export domain
+  shell: >
+    /qci/storage_setup  --url={{ engine_fqdn }}
+                        --username={{ engine_username }} 
+                        --password={{ admin_password }}
+                        --exportcenter={{ dc_name }}
+                        --storage-name={{ export_storage_name }}
+                        --storage-path={{ export_storage_path }}
+                        --storage-address={{ export_storage_address }}
+                        --storage-type='export'
+  when: deploy_cfme
