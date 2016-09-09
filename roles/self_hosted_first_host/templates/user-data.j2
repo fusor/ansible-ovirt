@@ -31,14 +31,14 @@ write_files:
      # Not safe to do in self-hosted scenario
      OVESETUP_SYSTEM/nfsConfigEnabled=bool:False
      OVESETUP_PKI/organization=str:{{ engine_organization }}
-     OVESETUP_CONFIG/adminPassword=str:{{ engine_admin_password }}
+     OVESETUP_CONFIG/adminPassword=str:{{ admin_password }}
      OVESETUP_CONFIG/applicationMode=str:{{ engine_application_mode }}
      # OVESETUP_CONFIG/firewallManager=str:iptables
      OVESETUP_CONFIG/firewallChangesReview=bool:False
      VESETUP_CONFIG/updateFirewall=bool:True
      OVESETUP_CONFIG/websocketProxyConfig=none:None
      OVESETUP_CONFIG/fqdn=str:{{ engine_fqdn }}
-     OVESETUP_CONFIG/storageType=str:{{ engine_storage_type }}
+     OVESETUP_CONFIG/storageType=str:{{ storage_type }}
      # OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
      # OVESETUP_APACHE/configureRootRedirection=bool:True
      # OVESETUP_APACHE/configureSsl=bool:True
@@ -72,7 +72,7 @@ write_files:
 
      OVESETUP_REPORTS_CORE/enable=bool:True
      OVESETUP_REPORTS_CONFIG/heapMin=str:1024M
-     OVESETUP_REPORTS_CONFIG/adminPassword=str:{{ engine_admin_password }}
+     OVESETUP_REPORTS_CONFIG/adminPassword=str:{{ admin_password }}
      OVESETUP_REPORTS_CONFIG/heapMax=str:1024M
      OVESETUP_REPORTS_DB/fixDbViolations=none:None
      OVESETUP_REPORTS_DB/database=str:ovirt_engine_reports

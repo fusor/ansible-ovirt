@@ -2,7 +2,7 @@
 OVEHOSTED_CORE/confirmSettings=bool:True
 OVEHOSTED_CORE/deployProceed=bool:True
 OVEHOSTED_CORE/screenProceed=bool:True
-OVEHOSTED_STORAGE/domainType=str:{{ 'nfs' if storage_type == "nfs3" else "glusterfs" }}
+OVEHOSTED_STORAGE/domainType=str:{{ 'nfs3' if storage_type == "nfs" else "glusterfs" }}
 
 OVEHOSTED_VDSM/cpu=str:{{ cpu_model }}
 
@@ -14,7 +14,7 @@ OVEHOSTED_NETWORK/bridgeIf=str:{{ provisioning_interface.stdout }}
 OVEHOSTED_STORAGE/storageDomainConnection=str:{{ hosted_storage_address }}:{{ hosted_storage_path }}
 OVEHOSTED_STORAGE/storageDomainName=str:{{ hosted_storage_name }}
 OVEHOSTED_ENGINE/appHostName=str:hosted_engine_{{ host_id }}
-OVEHOSTED_ENGINE/adminPassword=str:{{ engine_admin_password }}
+OVEHOSTED_ENGINE/adminPassword=str:{{ admin_password }}
 
 
 # Multiple hypervisor things

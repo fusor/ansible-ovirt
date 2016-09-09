@@ -2,24 +2,38 @@
 
 - name: Install dependences
   yum: name=ovirt-hosted-engine-setup state=present
+  tags:
+    - packages
 
 - name: get the provisioning nic for the machine
-  shell: ip addr | grep -Pzo '^[0-9]+:(.*):.*\\n.*{{ mac_address }}.*' | sed -r -n 's/[0-9]+: (.*):.*/\1/p' | head -n1 | xargs -I NIC echo 'OVEHOSTED_NETWORK/bridgeIf=str:NIC' >> /etc/qci/answers
-  register: provisioning_nic
+  shell: |
+     ip addr | grep -Pzo '^[0-9]+:(.*):.*\n.*{{ mac_address }}.*' | sed -r -n 's/[0-9]+: (.*):.*/\1/p' | head -n1
+  register: provisioning_interface
+  tags:
+    - setup
+
+- name: print provisioning nic
+  debug: msg={{provisioning_interface}}
 
 - name: create qci directory
   file:
       path: /etc/qci
       state: directory
       mode: 0600
+  tags:
+    - setup
 
 - name: Get the answer file over there
   template:
-      src: templates/answers
+      src: answers.j2
       dest: /etc/qci/answers
       mode: 0600
+  tags:
+    - setup
 
 - name: Execute hosted-engine setup
   shell: hosted-engine --deploy --config-append=/etc/qci/answers
   async: 12000
   poll: 30
+  tags:
+    - install

@@ -3,7 +3,7 @@
 script_dir: /etc/qci/scripts/
 
 engine_fqdn: rhev-engine.example.com
-engine_username: admin
+engine_username: admin@internal
 admin_password: changeme
 dc_name: Default
 

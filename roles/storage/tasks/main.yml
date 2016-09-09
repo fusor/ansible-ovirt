@@ -1,37 +1,51 @@
 ---
 
 - name: ensure the script directory exists
-  file: 
+  file:
     path: '{{ script_dir }}'
     state: directory
     recurse: yes
-    mode: 0600
+    mode: 0700
+  tags:
+    - config
 
 - name: copy storage setup script
   copy:
     src: files/storage_setup
     dest: '{{ script_dir }}/storage_setup'
     mode: 0700
+  tags:
+    - config
 
 - name: Set up data domain
-  shell: >
-    {{ script_dir }}/storage_setup  --url={{ engine_fqdn }}
-                        --username={{ engine_username }} 
-                        --password={{ admin_password }}
-                        --datacenter={{ dc_name }}
-                        --storage-name={{ data_storage_name }}
-                        --storage-path={{ data_storage_path }}
-                        --storage-address={{ data_storage_address }}
-                        --storage-type='data'
+  command: >
+    {{ script_dir }}/storage_setup  --url='https://{{ engine_fqdn }}/ovirt-engine/api'
+                                    --username='{{ engine_username }}'
+                                    --password='{{ admin_password }}'
+                                    --datacenter='{{ dc_name }}'
+                                    --storage-name='{{ data_storage_name }}'
+                                    --storage-path='{{ data_storage_path }}'
+                                    --storage-address='{{ data_storage_address }}'
+                                    --storage-type='{{ storage_type }}'
+                                    --domain-type='data'
+  retries: 5
+  delay: 30
+  tags:
+    - config
 
 - name: Set up export domain
-  shell: >
-    {{ script_dir }}/storage_setup  --url={{ engine_fqdn }}
-                        --username={{ engine_username }} 
-                        --password={{ admin_password }}
-                        --exportcenter={{ dc_name }}
-                        --storage-name={{ export_storage_name }}
-                        --storage-path={{ export_storage_path }}
-                        --storage-address={{ export_storage_address }}
-                        --storage-type='export'
+  command: >
+    {{ script_dir }}/storage_setup  --url='https://{{ engine_fqdn }}/ovirt-engine/api'
+                                    --username='{{ engine_username }}'
+                                    --password='{{ admin_password }}'
+                                    --datacenter='{{ dc_name }}'
+                                    --storage-name='{{ export_storage_name }}'
+                                    --storage-path='{{ export_storage_path }}'
+                                    --storage-address='{{ export_storage_address }}'
+                                    --storage-type='{{ storage_type }}'
+                                    --domain-type='export'
   when: deploy_cfme
+  retries: 5
+  delay: 30
+  tags:
+    - config

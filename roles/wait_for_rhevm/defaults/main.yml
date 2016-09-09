@@ -1,0 +1,7 @@
+---
+
+engine_fqdn: rhevm.example.com
+engine_username: admin@internal
+admin_password: changeme
+retries: 10
+delay: 60

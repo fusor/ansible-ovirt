@@ -1,0 +1,42 @@
+---
+
+- name: Install dependences
+  yum: name={{ item }} state=present
+  with_items:
+      - rhevm
+      - glusterfs-fuse
+      - python-enum34
+  tags:
+    - packages
+
+- name: Stop and disable NetworkManager
+  service:
+      name: NetworkManager
+      enabled: no
+      state: stopped
+  tags:
+    - setup
+
+- name: create qci directory
+  file:
+      path: /etc/qci
+      state: directory
+      mode: 0700
+  tags:
+    - setup
+
+- name: Get the answer file over there
+  template:
+      src: answers.j2
+      dest: /etc/qci/answers
+      mode: 0600
+  tags:
+    - setup
+
+- name: Execute hosted-engine setup
+  shell: |
+    hosted-engine --deploy --config-append=/etc/qci/answers
+  async: 12000
+  poll: 30
+  tags:
+    - install

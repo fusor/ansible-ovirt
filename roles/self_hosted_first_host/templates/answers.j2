@@ -12,7 +12,7 @@ OVEHOSTED_NETWORK/gateway=str:{{ gateway }}
 OVEHOSTED_ENGINE/insecureSSL=none:None
 OVEHOSTED_ENGINE/clusterName=str:{{ cluster_name }}
 OVEHOSTED_STORAGE/storageDatacenterName=str:{{ dc_name }}
-OVEHOSTED_STORAGE/domainType=str:{{ 'nfs' if storage_type == "nfs3" else "glusterfs" }}
+OVEHOSTED_STORAGE/domainType=str:{{ storage_domain_type }}
 OVEHOSTED_STORAGE/glusterBrick=none:None
 OVEHOSTED_STORAGE/LunID=none:None
 OVEHOSTED_STORAGE/iSCSIPortalIPAddress=none:None
@@ -44,7 +44,7 @@ OVEHOSTED_NOTIF/destEmail=str:root@localhost
 OVEHOSTED_VM/cloudinitExecuteEngineSetup=bool:True
 
 OVEHOSTED_VM/cloudinitRootPwd=str:{{ root_password }}
-OVEHOSTED_ENGINE/adminPassword=str:{{ engine_admin_password }}
+OVEHOSTED_ENGINE/adminPassword=str:{{ admin_password }}
 OVEHOSTED_ENGINE/engineSetupTimeout=int:3600
 
 NETWORK/sshEnable=bool:True

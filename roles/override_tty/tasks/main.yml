@@ -1,0 +1,9 @@
+- name: Override tty
+  lineinfile:
+    dest: /etc/sudoers
+    line: Defaults    !requiretty
+    regexp: Defaults.*requiretty
+    state: present
+    validate: visudo -cf %s
+  tags:
+    - setup

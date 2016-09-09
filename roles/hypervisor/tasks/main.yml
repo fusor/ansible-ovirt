@@ -1,0 +1,10 @@
+---
+
+- name: Install dependencies
+  yum: name={{ item }} state=present
+  with_items:
+    - vdsm
+    - glusterfs-fuse
+    - gluserfs-cli
+  tags:
+    - packages

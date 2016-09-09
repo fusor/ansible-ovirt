@@ -1,0 +1,110 @@
+#! /usr/bin/env python
+
+import time
+from ovirtsdk.api import API
+from ovirtsdk.xml import params
+
+
+def debug(f):
+    def inner(*args, **kwargs):
+        import ipdb
+        with ipdb.launch_ipdb_on_exception():
+            return f(*args, **kwargs)
+    return inner
+
+
+# @debug
+def main():
+    args = parse_args()
+    engine_api = get_api(
+        url=args.url,
+        user=args.username,
+        password=args.password,
+        insecure=True
+    )
+
+    add_host(engine_api, args.host, args.cluster, args.host_password)
+    wait_for_vdsm_up(engine_api, args.host)
+
+
+def parse_args():
+    from optparse import OptionParser
+    parser = OptionParser()
+
+    parser.add_option('--url', dest='url',
+                      help='the url for the Engine api')
+    parser.add_option('--username', dest='username',
+                      help='the username for the Engine api')
+    parser.add_option('--password', dest='password',
+                      help='the password for the Engine api')
+    parser.add_option('--host', dest='host',
+                      help='the address or hostname of the hypervisor host')
+    parser.add_option('--host-password', dest='host_password',
+                      help='the root password for the hypervisor')
+    parser.add_option('--cluster', dest='cluster',
+                      help='the name of the cluster to add the hypervisor to')
+
+    (options, args) = parser.parse_args()
+
+    if not all(options.__dict__.values()):
+        print('Not all required options were provided')
+        actual = [key for (key, value) in options.__dict__.items() if value]
+        print('Got: {}'.format(', '.join(actual)))
+        print('Expected: {}'.format(', '.join(options.__dict__.keys())))
+        exit(1)
+    return options
+
+
+def get_api(url=None, user=None, password=None, insecure=False, timeout=30):
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            return API(
+                url=url,
+                username=user,
+                password=password,
+                insecure=insecure
+            )
+        except Exception:
+            time.sleep(10)
+
+
+def add_host(engine_api, host, cluster_name, password):
+    host_params = params.Host(
+        name=host,
+        address=host,
+        cluster=engine_api.clusters.get(cluster_name),
+        root_password=password,
+        override_iptables=True
+    )
+
+    installed_host = (engine_api.hosts.get(name=host) or
+                      engine_api.hosts.add(host_params))
+
+    return installed_host
+
+
+def wait_vdsm_host_up(engine_api, host, retries=600, delay=5):
+    for i in retries:
+        state = None
+        try:
+            state = engine_api.hosts.get(host).status.state
+        except Exception as e:
+            print 'Error fetching host state: {}'.format(e)
+        else:
+            print 'VDSM host in {state} state'.format(state=state)
+            if 'failed' in state:
+                raise Exception('The VDSM host was found in a failed state. Please check engine and bootstrap installation logs.')
+            elif state == 'up':
+                print 'The VDSM Host is now operational'
+                return True
+
+        if i % 30 == 0:
+            print('Waiting for VDSM host to become operational...')
+        time.sleep(delay)
+
+    raise Exception('Timed out while waiting for host to start. Please check the logs.')
+
+
+if __name__ == '__main__':
+    main()

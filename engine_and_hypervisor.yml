@@ -2,12 +2,16 @@
 
 - hosts: engine
   roles:
+    - override_tty
     - engine
+    - { role: wait_for_rhevm, tags: ['config'] }
     - datacenter
 
 - hosts: hypervisor
   roles:
+    - override_tty
     - hypervisor
+    - { role: register_hypervisor, script_runner: {{ engine_fqdn }} }
 
 - hosts: engine
   roles:

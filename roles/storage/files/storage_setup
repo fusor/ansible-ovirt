@@ -3,25 +3,45 @@
 import time
 from ovirtsdk.api import API
 from ovirtsdk.xml import params
+from ovirtsdk.infrastructure.errors import RequestError
 
 
+def debug(f):
+    def inner(*args, **kwargs):
+        import ipdb
+        with ipdb.launch_ipdb_on_exception():
+            return f(*args, **kwargs)
+    return inner
+
+
+# @debug
 def main():
     args = parse_args()
     engine_api = get_api(
         url=args.url,
         user=args.username,
         password=args.password,
-        insecure=True, timeout=600
+        insecure=True
     )
+    datacenter = engine_api.datacenters.get(args.dc_name)
 
     storage = {
-        'type': args.storage_type,
+        'storage_type': args.storage_type,
+        'domain_type': args.domain_type,
         'name': args.storage_name,
         'address': args.storage_address,
         'path': args.storage_path,
+
     }
-    print("Creating {} storage domain".format(storage['type']))
-    createStorageDomain(engine_api, storage, args.dc_name)
+
+    print("Creating {} storage domain".format(storage['domain_type']))
+    storage_domain = create_storage_domain(engine_api, storage, datacenter)
+
+    try:
+        attach_storage_domain(engine_api, storage_domain, datacenter)
+    except RequestError as e:
+        if e.status != 409:
+            raise
 
 
 def parse_args():
@@ -43,7 +63,9 @@ def parse_args():
     parser.add_option('--storage-address', dest='storage_address',
                       help="the address for the storage domain's share")
     parser.add_option('--storage-type', dest='storage_type',
-                      help='the type of the storage domain')
+                      help='the type of the storage (nfs, glusterfs)')
+    parser.add_option('--domain-type', dest='domain_type',
+                      help='the type of the domain (data, export, iso)')
 
     (options, args) = parser.parse_args()
 
@@ -70,46 +92,32 @@ def get_api(url=None, user=None, password=None, insecure=False, timeout=30):
             time.sleep(10)
 
 
-def createStorageDomain(engine_api, storage, dc_name):
-    sd = engine_api.storagedomains.get(name=storage['name'])
-    datacenter = engine_api.datacenters.get(dc_name)
+def create_storage_domain(engine_api, storage, datacenter):
     storage_params = params.Storage(
-        type_=storage['type'],
-        vfs_type=storage['type'],
+        type_=storage['storage_type'],
+        vfs_type=storage['storage_type'],
         address=storage['address'],
         path=storage['path'],
     )
-    sdParams = params.StorageDomain(
+    sd_params = params.StorageDomain(
         name=storage['name'],
         data_center=datacenter,
-        type_=storage['type'],
-        host=getRunningHost(engine_api),
-        storage=storage['name']
+        type_=storage['domain_type'],
+        host=get_running_host(engine_api),
+        storage=storage_params
     )
-    if sd and sd.status and sd.status.state == 'unattached':
-        print('Storage: ' + sd.name + ' already exists')
-        attachStorageDomain(engine_api, storage_params, datacenter)
-    else:
-        try:
-            if engine_api.storagedomains.add(sdParams):
-                print('NFS Storage Domain was created successfully')
-                attachStorageDomain(engine_api, storage_params, datacenter)
-        except Exception:
-            print('%s Domain failed to be created' % storage['name'])
-            exit(1)
+    return (engine_api.storagedomains.get(name=storage['name']) or
+          engine_api.storagedomains.add(sd_params))
 
 
-def attachStorageDomain(engine_api, storage_name, datacenter):
-    try:
-        storage_domain = engine_api.storagedomains.get(name=storage_name)
-        if datacenter.storagedomains.add(storage_domain):
-            print '%s Domain was attached successfully' % storage_name
-    except Exception as e:
-        print 'Failed to attach %s Domain:\n%s' % (storage_name, str(e))
-        exit(1)
+def attach_storage_domain(engine_api, storage_domain, datacenter):
+    if storage_domain.status and storage_domain.status.state == 'unattached':
+        print('Storage domain exists and is attached')
+    elif datacenter.storagedomains.add(storage_domain):
+        print('Domain was attached successfully')
 
 
-def getRunningHost(engine_api):
+def get_running_host(engine_api):
     host_list = engine_api.hosts.list()
     for host in host_list:
         # should add condition to match configured cluster as well

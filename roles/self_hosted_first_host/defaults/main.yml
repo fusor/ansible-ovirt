@@ -5,8 +5,8 @@ engine_fqdn: rhev-engine.example.com
 gateway: '192.168.1.1'
 cluster_name: Default
 storageDatacenterName: hosted_storage
-storage_domain_type: nfs
-storage_type: nfs3
+storage_domain_type: nfs3
+storage_type: nfs
 hosted_storage_name: my_hosted_storage
 hosted_storage_addrees: www.example.com
 hosted_storage_path: /path/to/storage

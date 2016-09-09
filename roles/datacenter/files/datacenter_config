@@ -14,7 +14,7 @@ def main():
         url=args.url,
         user=args.username,
         password=args.password,
-        insecure=True, timeout=600
+        insecure=True
     )
 
     print "Creating DataCenter"
@@ -59,6 +59,8 @@ def parse_args():
         print('Got: {}'.format(', '.join(actual)))
         print('Expected: {}'.format(', '.join(options.__dict__.keys())))
         exit(1)
+    actual = [key for (key, value) in options.__dict__.items() if value]
+    print('Got: {}'.format(', '.join(actual)))
     return options
 
 
@@ -72,7 +74,8 @@ def get_api(url=None, user=None, password=None, insecure=False, timeout=30):
                 password=password,
                 insecure=insecure
             )
-        except Exception:
+        except Exception as e:
+            raise e
             time.sleep(10)
 
 
