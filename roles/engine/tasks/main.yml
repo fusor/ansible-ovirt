@@ -33,10 +33,17 @@
   tags:
     - setup
 
+- name: check if the setup has already run
+  command: systemctl status ovirt-engine
+  register: installed
+  changed_when: false
+  ignore_errors: yes
+
 - name: Execute engine setup
   shell: |
     engine-setup --offline --config-append=/etc/qci/answers
   async: 12000
   poll: 30
+  when: installed|failed
   tags:
     - install

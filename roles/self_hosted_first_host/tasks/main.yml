@@ -49,13 +49,6 @@
   tags:
     - setup
 
-- name: print appliance path
-  debug: msg={{rhevm_appliance}}
-- name: print provisioning nic
-  debug: msg={{provisioning_interface}}
-
-
-
 - name: create qci directory
   file:
       path: /etc/qci
@@ -113,10 +106,17 @@
   tags:
     - setup
 
+- name: check if the setup has already run
+  command: systemctl status ovirt-ha-agent
+  register: installed
+  changed_when: false
+  ignore_errors: yes
+
 - name: Execute hosted-engine setup
   shell: |
     hosted-engine --deploy --config-append=/etc/qci/answers
   async: 12000
   poll: 30
+  when: installed|failed
   tags:
     - install
