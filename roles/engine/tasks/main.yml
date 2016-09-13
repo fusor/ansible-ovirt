@@ -33,9 +33,9 @@
   tags:
     - setup
 
-- name: Execute hosted-engine setup
+- name: Execute engine setup
   shell: |
-    hosted-engine --deploy --config-append=/etc/qci/answers
+    engine-setup --offline --config-append=/etc/qci/answers
   async: 12000
   poll: 30
   tags:

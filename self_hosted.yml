@@ -4,7 +4,7 @@
   remote_user: root
   roles:
     - override_tty
-    # - self_hosted_first_host
+    - self_hosted_first_host
     - { role: wait_for_rhevm, tags: ['config'] }
     - datacenter
     - storage

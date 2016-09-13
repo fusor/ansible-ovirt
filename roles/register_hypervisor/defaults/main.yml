@@ -2,7 +2,7 @@
 
 script_dir: /etc/qci/scripts
 engine_fqdn: test-rhev-engine.example.com
-script_runner: {{ engine_fqdn }}
+script_runner: '{{ engine_fqdn }}'
 engine_username: admin@internal
 admin_password: changeme
 root_password: changeme

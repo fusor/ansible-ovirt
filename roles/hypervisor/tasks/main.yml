@@ -5,6 +5,6 @@
   with_items:
     - vdsm
     - glusterfs-fuse
-    - gluserfs-cli
+    - glusterfs-cli
   tags:
     - packages

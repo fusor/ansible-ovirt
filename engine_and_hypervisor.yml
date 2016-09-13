@@ -1,6 +1,7 @@
 ---
 
 - hosts: engine
+  remote_user: root
   roles:
     - override_tty
     - engine
@@ -8,11 +9,13 @@
     - datacenter
 
 - hosts: hypervisor
+  remote_user: root
   roles:
     - override_tty
     - hypervisor
-    - { role: register_hypervisor, script_runner: {{ engine_fqdn }} }
+    - { role: register_hypervisor, script_runner: '{{ engine_fqdn }}' }
 
 - hosts: engine
+  remote_user: root
   roles:
     - storage

@@ -24,7 +24,7 @@ def main():
     )
 
     add_host(engine_api, args.host, args.cluster, args.host_password)
-    wait_for_vdsm_up(engine_api, args.host)
+    wait_for_vdsm_host_up(engine_api, args.host)
 
 
 def parse_args():
@@ -84,8 +84,8 @@ def add_host(engine_api, host, cluster_name, password):
     return installed_host
 
 
-def wait_vdsm_host_up(engine_api, host, retries=600, delay=5):
-    for i in retries:
+def wait_for_vdsm_host_up(engine_api, host, retries=600, delay=5):
+    for i in range(retries):
         state = None
         try:
             state = engine_api.hosts.get(host).status.state
