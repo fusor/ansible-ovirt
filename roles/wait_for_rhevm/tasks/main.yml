@@ -11,3 +11,4 @@
   until: result.status == 200
   retries: '{{ retries }}'
   delay: '{{ delay }}'
+  changed_when: false
