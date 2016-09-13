@@ -4,18 +4,22 @@
   remote_user: root
   roles:
     - override_tty
+    - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - engine
     - { role: wait_for_rhevm, tags: ['config'] }
     - datacenter
 
-- hosts: hypervisor
+- hosts: hypervisors
   remote_user: root
   roles:
     - override_tty
+    - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - hypervisor
+    - { role: wait_for_rhevm, tags: ['config'] }
     - { role: register_hypervisor, script_runner: '{{ engine_fqdn }}' }
 
 - hosts: engine
   remote_user: root
   roles:
+    - { role: wait_for_rhevm, tags: ['config'] }
     - storage

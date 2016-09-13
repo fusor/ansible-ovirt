@@ -4,13 +4,15 @@
   remote_user: root
   roles:
     - override_tty
+    - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - self_hosted_first_host
     - { role: wait_for_rhevm, tags: ['config'] }
     - datacenter
     - storage
 
-- hosts: self_hosted_additional_host
+- hosts: self_hosted_additional_hosts
   remote_user: root
   roles:
     - override_tty
+    - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - self_hosted_additional_host

@@ -1,0 +1,10 @@
+---
+
+- name: print repositories
+  debug: msg='{{ repositories }}'
+
+- name: disable all
+  command: subscription-manager repos --disable=*
+
+- name: enable repos
+  command: subscription-manager repos --enable {{ repositories | join(' --enable ')}}
