@@ -4,7 +4,7 @@
   yum: name={{ item }} state=present
   with_items:
       - genisoimage
-      - rhevm-appliance
+      - '{{ "ovirt-engine-appliance" if ansible_distribution == "CentOS" else "rhevm-appliance" }}'
       - glusterfs-fuse
       - ovirt-hosted-engine-setup
   tags:
@@ -37,8 +37,8 @@
 
 
 - name: Find the path to the appliance image
-  shell: find /usr/share/ovirt-engine-appliance -name 'rhevm-appliance-*.ova'
-  register: rhevm_appliance
+  shell: find /usr/share/ovirt-engine-appliance -name '*-appliance-*.ova'
+  register: engine_appliance
   tags:
     - setup
 

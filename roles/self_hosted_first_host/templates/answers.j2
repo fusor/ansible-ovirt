@@ -26,7 +26,9 @@ OVEHOSTED_STORAGE/storageType=str:{{ storage_type }}
 OVEHOSTED_STORAGE/storageDomainConnection=str:{{ hosted_storage_address }}:{{ hosted_storage_path }}
 OVEHOSTED_STORAGE/iSCSIPortalUser=none:None
 OVEHOSTED_VDSM/consoleType=str:vnc
-OVEHOSTED_VM/ovfArchive=str:{{ rhevm_appliance.stdout  }}
+OVEHOSTED_VM/vmMemSizeMB=int:{{ engine_vm_ram }}
+OVEHOSTED_VM/vmVCpus=str:{{ engine_vm_cpus }}
+OVEHOSTED_VM/ovfArchive=str:{{ engine_appliance.stdout  }}
 OVEHOSTED_VM/vmMACAddr=str:{{ engine_mac_address  }}
 OVEHOSTED_VM/emulatedMachine=str:rhel6.5.0
 OVEHOSTED_VM/vmCDRom=str:/etc/qci/cloud_init/cloud.iso
@@ -45,7 +47,7 @@ OVEHOSTED_VM/cloudinitExecuteEngineSetup=bool:True
 
 OVEHOSTED_VM/cloudinitRootPwd=str:{{ root_password }}
 OVEHOSTED_ENGINE/adminPassword=str:{{ admin_password }}
-OVEHOSTED_ENGINE/engineSetupTimeout=int:3600
+OVEHOSTED_ENGINE/engineSetupTimeout=int:{{ engine_setup_timeout }}
 
 NETWORK/sshEnable=bool:True
 NETWORK/sshUser=str:root

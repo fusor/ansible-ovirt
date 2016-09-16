@@ -2,6 +2,9 @@
 
 # self-hosted-answers
 engine_fqdn: rhev-engine.example.com
+engine_vm_ram: 4096
+engine_vm_cpus: 2
+engine_setup_timeout: 3600
 gateway: '192.168.1.1'
 cluster_name: Default
 storageDatacenterName: hosted_storage

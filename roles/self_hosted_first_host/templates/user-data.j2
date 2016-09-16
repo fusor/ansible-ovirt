@@ -33,15 +33,15 @@ write_files:
      OVESETUP_PKI/organization=str:{{ engine_organization }}
      OVESETUP_CONFIG/adminPassword=str:{{ admin_password }}
      OVESETUP_CONFIG/applicationMode=str:{{ engine_application_mode }}
-     # OVESETUP_CONFIG/firewallManager=str:iptables
+     OVESETUP_CONFIG/firewallManager=str:iptables
      OVESETUP_CONFIG/firewallChangesReview=bool:False
-     VESETUP_CONFIG/updateFirewall=bool:True
+     OVESETUP_CONFIG/updateFirewall=bool:True
      OVESETUP_CONFIG/websocketProxyConfig=none:None
      OVESETUP_CONFIG/fqdn=str:{{ engine_fqdn }}
      OVESETUP_CONFIG/storageType=str:{{ storage_type }}
-     # OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
-     # OVESETUP_APACHE/configureRootRedirection=bool:True
-     # OVESETUP_APACHE/configureSsl=bool:True
+     OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
+     OVESETUP_APACHE/configureRootRedirection=bool:True
+     OVESETUP_APACHE/configureSsl=bool:True
      OSETUP_RPMDISTRO/requireRollback=none:None
      OSETUP_RPMDISTRO/enableUpgrade=none:None
      OVESETUP_ENGINE_CORE/enable=bool:True
@@ -101,12 +101,14 @@ write_files:
 
 
 runcmd:
+{% if ansible_distribution == 'Red Hat Enterprise Linux' %}
  - echo "Enabling ssh access" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - bash -e /root/fix_ssh.sh 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - sed -i -e '$aAllowUsers root'
  - rpm -ivh http://{{ satellite_fqdn }}/pub/katello-ca-consumer-latest.noarch.rpm 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - echo "Registering the System" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - subscription-manager register --org="Default_Organization" --name="{{ engine_fqdn }}" --activationkey="{{ engine_activation_key }}" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+{% endif %}
  - echo "Running engine setup" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - /usr/bin/engine-setup --offline --config-append=/root/answers 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - if [ $? -eq 0 ]; then echo "HE_APPLIANCE_ENGINE_SETUP_SUCCESS" >/dev/virtio-ports/org.ovirt.hosted-engine-setup.0; else echo "HE_APPLIANCE_ENGINE_SETUP_FAIL" >/dev/virtio-ports/org.ovirt.hosted-engine-setup.0; fi
