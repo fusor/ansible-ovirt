@@ -13,79 +13,30 @@ write_files:
  - content: |
      [environment:init]
      DIALOG/autoAcceptDefault=bool:True
-     # action=setup
      [environment:default]
-     OVESETUP_CONFIG/updateFirewall=bool:True
-     OVESETUP_CONFIG/sanWipeAfterDelete=bool:False
-     OVESETUP_DIALOG/confirmSettings=bool:True
-     OVESETUP_CONFIG/remoteEngineSetupStyle=none:None
-     OVESETUP_CORE/engineStop=bool:True
-     OVESETUP_DB/database=str:engine
-     OVESETUP_DB/fixDbViolations=none:None
-     OVESETUP_DB/secured=bool:False
+     OVESETUP_CONFIG/adminPassword=str:{{ admin_password }}
+     OVESETUP_CONFIG/fqdn=str:{{ engine_fqdn }}
+     OVESETUP_PKI/organization=str:{{ engine_organization }}
      OVESETUP_DB/host=str:{{ engine_db_host }}
      OVESETUP_DB/user=str:{{ engine_db_user }}
-     OVESETUP_DB/securedHostValidation=bool:False
      OVESETUP_DB/password=str:{{ engine_db_password }}
      OVESETUP_DB/port=int:{{ engine_db_port }}
-     # Not safe to do in self-hosted scenario
-     OVESETUP_SYSTEM/nfsConfigEnabled=bool:False
-     OVESETUP_PKI/organization=str:{{ engine_organization }}
-     OVESETUP_CONFIG/adminPassword=str:{{ admin_password }}
      OVESETUP_CONFIG/applicationMode=str:{{ engine_application_mode }}
-     OVESETUP_CONFIG/firewallManager=str:iptables
-     OVESETUP_CONFIG/firewallChangesReview=bool:False
-     OVESETUP_CONFIG/updateFirewall=bool:True
-     OVESETUP_CONFIG/websocketProxyConfig=none:None
-     OVESETUP_CONFIG/fqdn=str:{{ engine_fqdn }}
      OVESETUP_CONFIG/storageType=str:{{ storage_type }}
-     OVESETUP_PROVISIONING/postgresProvisioningEnabled=bool:True
-     OVESETUP_APACHE/configureRootRedirection=bool:True
-     OVESETUP_APACHE/configureSsl=bool:True
-     OSETUP_RPMDISTRO/requireRollback=none:None
-     OSETUP_RPMDISTRO/enableUpgrade=none:None
-     OVESETUP_ENGINE_CORE/enable=bool:True
-     OVESETUP_SYSTEM/memCheckEnabled=bool:False
-     OVESETUP_CONFIG/websocketProxyConfig=bool:True
-     OVESETUP_CONFIG/storageIsLocal=bool:False
-     OVESETUP_CONFIG/imageioProxyConfig=bool:False
-     OVESETUP_SYSTEM/memCheckEnabled=bool:False
-     OVESETUP_CONFIG/updateFirewall=bool:True
-     OVESETUP_VMCONSOLE_PROXY_CONFIG/vmconsoleProxyConfig=bool:True
-     OVESETUP_RHEVM_SUPPORT/configureRedhatSupportPlugin=bool:False
-     OVESETUP_RHEVM_SUPPORT/redhatSupportProxyEnabled=bool:False
-
      OVESETUP_DWH_CORE/enable=bool:True
-     OVESETUP_DWH_CONFIG/scale=str:1
-     OVESETUP_DWH_DB/fixDbViolations=none:None
-     OVESETUP_DWH_DB/database=str:ovirt_engine_history
-     OVESETUP_DWH_DB/secured=bool:False
      OVESETUP_DWH_DB/host=str:{{ engine_db_host }}
-     OVESETUP_DWH_DB/disconnectExistingDwh=none:None
-     OVESETUP_DWH_DB/restoreBackupLate=bool:True
-     OVESETUP_DWH_DB/user=str:ovirt_engine_history
-     OVESETUP_DWH_DB/securedHostValidation=bool:False
-     OVESETUP_DWH_DB/performBackup=none:None
      OVESETUP_DWH_DB/password=str:{{ engine_db_password }}
      OVESETUP_DWH_DB/port=int:{{ engine_db_port }}
-     OVESETUP_DWH_PROVISIONING/postgresProvisioningEnabled=bool:True
-
      OVESETUP_REPORTS_CORE/enable=bool:True
-     OVESETUP_REPORTS_CONFIG/heapMin=str:1024M
      OVESETUP_REPORTS_CONFIG/adminPassword=str:{{ admin_password }}
-     OVESETUP_REPORTS_CONFIG/heapMax=str:1024M
-     OVESETUP_REPORTS_DB/fixDbViolations=none:None
-     OVESETUP_REPORTS_DB/database=str:ovirt_engine_reports
-     OVESETUP_REPORTS_DB/secured=bool:False
      OVESETUP_REPORTS_DB/host=str:{{ engine_db_host }}
-     OVESETUP_REPORTS_DB/user=str:ovirt_engine_reports
-     OVESETUP_REPORTS_DB/securedHostValidation=bool:False
      OVESETUP_REPORTS_DB/password=str:{{ engine_db_password }}
      OVESETUP_REPORTS_DB/port=int:{{ engine_db_port }}
-     OVESETUP_REPORTS_PROVISIONING/postgresProvisioningEnabled=bool:True
    path: /root/answers
    owner: root:root
    permissions: '0640'
+
+{% if ansible_distribution == 'Red Hat Enterprise Linux' %}
  - content: |
      if  ! grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config ; then
        sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -98,7 +49,7 @@ write_files:
      fi
    path: /root/fix_ssh.sh
    permissions: '0755'
-
+{% endif %}
 
 runcmd:
 {% if ansible_distribution == 'Red Hat Enterprise Linux' %}

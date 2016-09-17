@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :libvirt do |libvirt, override|
     libvirt.driver = "kvm"
-    libvirt.memory = 8192
+    libvirt.memory = 16000
     libvirt.cpus = `grep -c ^processor /proc/cpuinfo`.to_i
   end
 
