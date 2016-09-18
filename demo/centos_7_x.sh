@@ -6,10 +6,12 @@ if [ "$EUID" -ne "0" ]; then
 fi
 (set -x
 
-# HACK
-# swap name resolution order
-mv /etc/resolv.conf /etc/resolv.conf.bak
-(tac /etc/resolv.conf.bak) > /etc/resolv.conf
+# example.org domains don't resolve with the original order
+cat << EOF > /etc/resolv.conf
+search example.org
+nameserver 192.168.33.1
+nameserver 192.168.121.1
+EOF
 
 # Enable root ssh key access
 cp -R /home/vagrant/.ssh /root/.ssh

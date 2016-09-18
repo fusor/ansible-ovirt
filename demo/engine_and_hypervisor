@@ -1,6 +1,6 @@
 [engine]
-x1.example.com
+x1.example.org
 
 [hypervisors]
-x2.example.com
-x3.example.com
+x2.example.org
+x3.example.org
