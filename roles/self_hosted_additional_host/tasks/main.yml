@@ -15,9 +15,9 @@
 - name: print provisioning nic
   debug: msg={{provisioning_interface}}
 
-- name: create qci directory
+- name: create config directory
   file:
-      path: /etc/qci
+      path: '{{ config_dir }}'
       state: directory
       mode: 0600
   tags:
@@ -26,13 +26,13 @@
 - name: Get the answer file over there
   template:
       src: answers.j2
-      dest: /etc/qci/answers
+      dest: '{{ config_dir }}/answers'
       mode: 0600
   tags:
     - setup
 
 - name: Execute hosted-engine setup
-  shell: hosted-engine --deploy --config-append=/etc/qci/answers
+  shell: hosted-engine --deploy --config-append={{ config_dir }}/answers
   async: 12000
   poll: 30
   tags:

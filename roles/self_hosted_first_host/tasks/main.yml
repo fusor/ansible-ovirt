@@ -49,9 +49,9 @@
   tags:
     - setup
 
-- name: create qci directory
+- name: create config directory
   file:
-      path: /etc/qci
+      path: '{{ config_dir }}'
       state: directory
       mode: 0700
       owner: qemu
@@ -62,14 +62,14 @@
 - name: Get the answer file over there
   template:
       src: answers.j2
-      dest: /etc/qci/answers
+      dest: '{{ config_dir }}/answers'
       mode: 0600
   tags:
     - setup
 
 - name: Create cloud init temp directory
   file:
-      path: '/etc/qci/cloud_init'
+      path: '{{ config_dir }}/cloud_init'
       state: directory
       mode: 0700
       owner: qemu
@@ -85,20 +85,20 @@
       group: qemu
       mode: 0600
   with_items:
-    - { src: user-data.j2, dest: /etc/qci/cloud_init/user-data }
-    - { src: meta-data.j2, dest: /etc/qci/cloud_init/meta-data }
+    - { src: user-data.j2, dest: '{{ config_dir }}/cloud_init/user-data' }
+    - { src: meta-data.j2, dest: '{{ config_dir }}/cloud_init/meta-data' }
   tags:
     - setup
 
 - name: Generate cloud-init iso
   shell: |
-    genisoimage -output '/etc/qci/cloud_init/cloud.iso' -volid cidata -joliet -rock -input-charset utf-8  '/etc/qci/cloud_init/meta-data' '/etc/qci/cloud_init/user-data'
+    genisoimage -output '{{ config_dir }}/cloud_init/cloud.iso' -volid cidata -joliet -rock -input-charset utf-8  '{{ config_dir }}/cloud_init/meta-data' '{{ config_dir }}/cloud_init/user-data'
   tags:
     - setup
 
 - name: Fix permissions on iso
   file:
-      name: /etc/qci/cloud_init/cloud.iso
+      name: '{{ config_dir }}/cloud_init/cloud.iso'
       group: qemu
       owner: qemu
       state: file
@@ -114,7 +114,7 @@
 
 - name: Execute hosted-engine setup
   shell: |
-    hosted-engine --deploy --config-append=/etc/qci/answers
+    hosted-engine --deploy --config-append={{ config_dir }}/answers
   async: 12000
   poll: 30
   when: installed|failed

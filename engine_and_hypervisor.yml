@@ -6,7 +6,7 @@
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - engine
-    - { role: wait_for_rhevm, tags: ['config'] }
+    - { role: wait_for_engine, tags: ['config'] }
     - datacenter
 
 - hosts: hypervisors
@@ -15,11 +15,11 @@
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - hypervisor
-    - { role: wait_for_rhevm, tags: ['config'] }
+    - { role: wait_for_engine, tags: ['config'] }
     - { role: register_hypervisor, script_runner: '{{ engine_fqdn }}' }
 
 - hosts: engine
   remote_user: root
   roles:
-    - { role: wait_for_rhevm, tags: ['config'] }
+    - { role: wait_for_engine, tags: ['config'] }
     - storage

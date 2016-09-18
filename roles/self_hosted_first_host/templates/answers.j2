@@ -31,7 +31,7 @@ OVEHOSTED_VM/vmVCpus=str:{{ engine_vm_cpus }}
 OVEHOSTED_VM/ovfArchive=str:{{ engine_appliance.stdout  }}
 OVEHOSTED_VM/vmMACAddr=str:{{ engine_mac_address  }}
 OVEHOSTED_VM/emulatedMachine=str:rhel6.5.0
-OVEHOSTED_VM/vmCDRom=str:/etc/qci/cloud_init/cloud.iso
+OVEHOSTED_VM/vmCDRom=str:{{ config_dir }}/cloud_init/cloud.iso
 OVEHOSTED_VM/automateVMShutdown=bool:True
 OVEHOSTED_VM/cloudInitISO=str:existing
 OVEHOSTED_VDSM/spicePkiSubject=str:C=EN, L=Test, O=Test, CN=Test

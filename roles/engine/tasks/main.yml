@@ -3,7 +3,7 @@
 - name: Install dependences
   yum: name={{ item }} state=present
   with_items:
-      - rhevm
+      - '{{ "ovirt-engine" if ansible_distribution == "CentOS" else "rhevm" }}'
       - glusterfs-fuse
       - python-enum34
   tags:
@@ -17,9 +17,9 @@
   tags:
     - setup
 
-- name: create qci directory
+- name: create config directory
   file:
-      path: /etc/qci
+      path: '{{ config_dir }}'
       state: directory
       mode: 0700
   tags:
@@ -28,7 +28,7 @@
 - name: Get the answer file over there
   template:
       src: answers.j2
-      dest: /etc/qci/answers
+      dest: '{{ config_dir }}/answers'
       mode: 0600
   tags:
     - setup
@@ -41,7 +41,7 @@
 
 - name: Execute engine setup
   shell: |
-    engine-setup --offline --config-append=/etc/qci/answers
+    engine-setup --offline --config-append={{ config_dir }}/answers
   async: 12000
   poll: 30
   when: installed|failed

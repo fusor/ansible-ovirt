@@ -1,12 +1,13 @@
 ---
 
+config_dir: /etc/ansible-ovirt
 admin_password: changeme
 engine_application_mode: both
 engine_db_host: localhost
 engine_db_password: changeme
 engine_db_port: 5432
 engine_db_user: engine
-engine_fqdn: rhev-engine.example.com
+engine_fqdn: ovirt-engine.example.com
 engine_organization: localdomain
 iso_domain_mount_point: /var/lib/exports/iso
 iso_domain_name: ISO_DOMAIN

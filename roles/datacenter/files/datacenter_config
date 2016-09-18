@@ -104,7 +104,6 @@ def create_mac_pool(engine_api, mac_pool_name, mac_address_range):
 
     mac_pool_params = params.MacPool(
         name=mac_pool_name,
-        description='Mac address pool generated for QCI deployment',
         ranges=ranges
     )
 

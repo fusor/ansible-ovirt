@@ -1,7 +1,7 @@
 ---
 
 # self-hosted-answers
-engine_fqdn: rhev-engine.example.com
+engine_fqdn: ovirt-engine.example.com
 engine_vm_ram: 4096
 engine_vm_cpus: 2
 engine_setup_timeout: 3600
@@ -18,6 +18,7 @@ engine_mac_address: '00:11:22:33:44:55'
 cpu_model: model_Nehalem
 root_password: changeme
 admin_password: changeme
+config_dir: /etc/ansible-ovirt
 
 
 # user-data

@@ -1,8 +1,8 @@
 ---
 
-script_dir: /etc/qci/scripts/
+config_dir: /etc/ansible-ovirt
 
-engine_fqdn: rhev-engine.example.com
+engine_fqdn: ovirt-engine.example.com
 engine_username: admin@internal
 admin_password: changeme
 

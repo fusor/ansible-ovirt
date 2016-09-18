@@ -6,7 +6,7 @@
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - self_hosted_first_host
-    - { role: wait_for_rhevm, tags: ['config'] }
+    - { role: wait_for_engine, tags: ['config'] }
     - datacenter
     - storage
 

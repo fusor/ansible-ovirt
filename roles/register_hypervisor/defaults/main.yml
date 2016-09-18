@@ -1,6 +1,6 @@
 ---
 
-script_dir: /etc/qci/scripts
+config_dir: /etc/ansible-ovirt
 engine_fqdn: test-rhev-engine.example.com
 script_runner: '{{ engine_fqdn }}'
 engine_username: admin@internal
