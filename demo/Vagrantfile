@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
   config.vm.define :x1 do |x1|
     x1.vm.hostname = 'x1'
     x1.vm.network :public_network, :type => 'bridge', :dev=> 'virbr40', :mac => "12:11:22:33:44:55"
+    x1.vm.provision :shell, :path => "setup_nfs_shares.sh"
   end
 
   config.vm.define :x2 do |x2|

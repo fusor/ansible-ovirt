@@ -44,7 +44,7 @@
                                             --storage-address='{{ export_storage_address }}'
                                             --storage-type='{{ storage_type }}'
                                             --domain-type='export'
-  when: deploy_cfme
+  when: create_export_domain
   retries: 5
   delay: 30
   tags:

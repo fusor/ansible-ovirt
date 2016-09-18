@@ -1,0 +1,16 @@
+{
+  "data_storage_address": "x1.example.com",
+  "data_storage_path": "/nfs_data/ovirt_storage",
+  "export_storage_address": "x1.example.com",
+  "export_storage_path": "/nfs_data/export",
+  "hosted_storage_address": "x1.example.com",
+  "hosted_storage_path": "/nfs_data/self_hosted",
+  "engine_db_host": "test-ovirt-engine.example.com",
+  "engine_fqdn": "test-ovirt-engine.example.com",
+  "engine_mac_address": "00:11:22:33:44:55",
+  "engine_username": "admin@internal",
+  "gateway": "192.168.33.1",
+  "mac_address_range": "00:11:23:00:00:00,00:11:23:FF:FF:FF",
+  "mac_pool_name": "macncheese",
+  "create_export_domain": "true"
+}

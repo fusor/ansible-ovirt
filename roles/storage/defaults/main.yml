@@ -15,4 +15,4 @@ export_storage_name: my_export_storage
 export_storage_address: www.example.com
 export_storage_path: /path/to/export
 
-deploy_cfme: false
+create_export_domain: false
