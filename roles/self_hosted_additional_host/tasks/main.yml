@@ -1,7 +1,11 @@
 ---
 
 - name: Install dependences
-  yum: name=ovirt-hosted-engine-setup state=present
+  yum: name={{item}} state=present
+  with_items:
+    - ovirt-hosted-engine-setup
+    - glusterfs-fuse
+    - glusterfs-cli
   tags:
     - packages
 

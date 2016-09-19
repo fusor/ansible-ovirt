@@ -1,5 +1,5 @@
 mac_address: '00:11:22:33:44:55'
-storage_type: nfs3
+storage_domain_type: nfs3
 cpu_model: model_Nehalem
 gateway: '192.168.1.1'
 hosted_storage_name: my_hosted_storage
