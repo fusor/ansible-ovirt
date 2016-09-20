@@ -1,3 +1,5 @@
+[environment:init]
+DIALOG/autoAcceptDefault=bool:True
 [environment:default]
 OVEHOSTED_CORE/confirmSettings=bool:True
 OVEHOSTED_CORE/deployProceed=bool:True
@@ -6,9 +8,8 @@ OVEHOSTED_STORAGE/domainType=str:{{ storage_domain_type }}
 
 OVEHOSTED_VDSM/cpu=str:{{ cpu_model }}
 
-OVEHOSTED_NETWORK/firewallManager=str:iptables
 OVEHOSTED_NETWORK/gateway=str:{{ gateway }}
-OVEHOSTED_NETWORK/host_name=str:{{ ansible_fqdn }}
+OVEHOSTED_NETWORK/host_name=str:{{ inventory_hostname }}
 OVEHOSTED_NETWORK/bridgeIf=str:{{ provisioning_interface.stdout }}
 
 OVEHOSTED_STORAGE/storageDomainConnection=str:{{ hosted_storage_address }}:{{ hosted_storage_path }}

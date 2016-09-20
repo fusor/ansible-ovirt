@@ -24,7 +24,7 @@
     {{ config_dir }}/scripts/add_host  --url='https://{{ engine_fqdn }}/ovirt-engine/api'
                                       --username='{{ engine_username }}'
                                       --password='{{ admin_password }}'
-                                      --host='{{ ansible_fqdn  }}'
+                                      --host='{{ inventory_hostname }}'
                                       --host-password='{{ root_password }}'
                                       --cluster='{{ cluster_name }}'
   retries: 5
