@@ -22,6 +22,10 @@
       <hostname>test-ovirt-engine</hostname>
       <hostname>test-ovirt-engine.example.org</hostname>
     </host>
+    <host ip='192.168.33.15'>
+      <hostname>nfs</hostname>
+      <hostname>nfs.example.org</hostname>
+    </host>
   </dns>
   <ip address='192.168.33.1' netmask='255.255.255.0'>
     <dhcp>
@@ -29,6 +33,7 @@
       <host mac='12:11:22:33:44:55' name='x1.example.org' ip='192.168.33.11'/>
       <host mac='12:11:22:33:44:56' name='x2.example.org' ip='192.168.33.12'/>
       <host mac='12:11:22:33:44:57' name='x3.example.org' ip='192.168.33.13'/>
+      <host mac='12:11:22:33:44:58' name='nfs.example.org' ip='192.168.33.15'/>
       <host mac='00:11:22:33:44:55' name='test-ovirt-engine.example.org' ip='192.168.33.14'/>
     </dhcp>
   </ip>

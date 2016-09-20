@@ -1,9 +1,9 @@
 {
-  "data_storage_address": "x1.example.org",
+  "data_storage_address": "nfs.example.org",
   "data_storage_path": "/nfs_data/ovirt_storage",
-  "export_storage_address": "x1.example.org",
+  "export_storage_address": "nfs.example.org",
   "export_storage_path": "/nfs_data/export",
-  "hosted_storage_address": "x1.example.org",
+  "hosted_storage_address": "nfs.example.org",
   "hosted_storage_path": "/nfs_data/self_hosted",
   "engine_db_host": "test-ovirt-engine.example.org",
   "engine_fqdn": "test-ovirt-engine.example.org",

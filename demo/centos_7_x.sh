@@ -13,6 +13,9 @@ nameserver 192.168.33.1
 nameserver 192.168.121.1
 EOF
 
+# Write protect (to prevent dhclient from breaking it)
+chattr +i /etc/resolv.conf
+
 # Enable root ssh key access
 cp -R /home/vagrant/.ssh /root/.ssh
 
