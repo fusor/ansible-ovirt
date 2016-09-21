@@ -30,3 +30,4 @@ satellite_fqdn: satellite.example.com
 engine_activation_key: 1-22222-33333
 engine_organization: localdomain
 engine_application_mode: virt
+engine_repositories: []
