@@ -9,7 +9,7 @@ gateway: '192.168.1.1'
 cluster_name: Default
 storageDatacenterName: hosted_storage
 storage_type: nfs
-storage_domain_type: '{{ nfs3 if storage_type == 'nfs' else storage_type }}'
+storage_domain_type: "{{ 'nfs3' if storage_type == 'nfs' else storage_type }}"
 hosted_storage_name: my_hosted_storage
 hosted_storage_addrees: www.example.com
 hosted_storage_path: /path/to/storage
