@@ -1,0 +1,8 @@
+---
+
+- name: wait for SSH to respond on host
+  local_action: wait_for port=22 host={{ inventory_hostname }}
+
+
+- name: Gather facts
+  setup:

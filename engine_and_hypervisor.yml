@@ -2,7 +2,9 @@
 
 - hosts: engine
   remote_user: root
+  gather_facts: no
   roles:
+    - wait_for_host_up
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - engine
@@ -11,7 +13,9 @@
 
 - hosts: hypervisors
   remote_user: root
+  gather_facts: no
   roles:
+    - wait_for_host_up
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - hypervisor

@@ -2,7 +2,9 @@
 
 - hosts: self_hosted_first_host
   remote_user: root
+  gather_facts: no
   roles:
+    - wait_for_host_up
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - self_hosted_first_host
@@ -12,7 +14,9 @@
 
 - hosts: self_hosted_additional_hosts
   remote_user: root
+  gather_facts: no
   roles:
+    - wait_for_host_up
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - self_hosted_additional_host
