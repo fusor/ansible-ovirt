@@ -15,6 +15,6 @@ Requires the vagrant-libvirt plugin
 
     `ansible-playbook -i demo/self_hosted self_hosted.yml -e "@demo/vars.json" --private-key=/usr/share/vagrant/keys/vagrant`
 
-1. (b) To deploy ovirt with separate engine + hypervisors:
+   (b) To deploy ovirt with separate engine + hypervisors:
 
     `ansible-playbook -i demo/engine_and_hypervisor engine_and_hypervisor.yml -e "@demo/vars.json" --private-key=/usr/share/vagrant/keys/vagrant`
