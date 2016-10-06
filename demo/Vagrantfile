@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 system("sudo ./setup_demo_network.sh")
 
 Vagrant.configure("2") do |config|
