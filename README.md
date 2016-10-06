@@ -12,8 +12,12 @@ Optionally can use the vagrant-cachier plugin, to cache packages between `vagran
 1. `vagrant up`
 
     This will bring up 4 VMs
-    - {x1|x2|x3}.example.org, each with 8GB of memory using all available processors
-    - nfs.example.org, with 2GB memory and 1 CPU
+    - {x1|x2|x3}, each with 8GB of memory using all available processors
+    - nfs, with 2GB memory and 1 CPU
+    
+    If you don't have enough resource to run all of them, you can specify the specific vms to bring up:
+    
+    `vagrant up x1 nfs`
 
 1. `cd ..`
 
