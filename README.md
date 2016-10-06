@@ -5,7 +5,7 @@ Requires ansible >= 2.1
 # Testing Vagrant environment
 Requires the vagrant-libvirt plugin
 
-Optionally can use the vagrant-cachier plugin, to cache packages between vagrant ups (strongly recommend for testing self-hosted, which downloads ~2GB of packages per deployment)
+Optionally can use the vagrant-cachier plugin, to cache packages between `vagrant up`s (strongly recommend for testing self-hosted, which downloads ~2GB of packages per deployment)
 
 1. `cd demo`
 
