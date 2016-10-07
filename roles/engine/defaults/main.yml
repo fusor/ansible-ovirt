@@ -13,3 +13,4 @@ iso_domain_mount_point: /var/lib/exports/iso
 iso_domain_name: ISO_DOMAIN
 nfs_config_enabled: false
 storage_type: nfs
+firewall_manager: firewalld

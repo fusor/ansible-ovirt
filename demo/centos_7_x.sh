@@ -6,6 +6,11 @@ if [ "$EUID" -ne "0" ]; then
 fi
 (set -x
 
+echo "changeme" | passwd root --stdin
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+firewall-cmd --reload
+
 # example.org domains don't resolve with the original order
 cat << EOF > /etc/resolv.conf
 search example.org

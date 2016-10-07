@@ -5,12 +5,12 @@
   "export_storage_path": "/nfs_data/export",
   "hosted_storage_address": "nfs.example.org",
   "hosted_storage_path": "/nfs_data/self_hosted",
-  "engine_db_host": "test-ovirt-engine.example.org",
-  "engine_fqdn": "test-ovirt-engine.example.org",
-  "engine_mac_address": "00:11:22:33:44:55",
+  "engine_db_host": "x1.example.org",
+  "engine_fqdn": "x1.example.org",
   "engine_username": "admin@internal",
   "gateway": "192.168.33.1",
   "mac_address_range": "00:11:23:00:00:00,00:11:23:FF:FF:FF",
   "mac_pool_name": "macncheese",
+  "firewall_manager": "firewalld",
   "create_export_domain": "true"
 }
