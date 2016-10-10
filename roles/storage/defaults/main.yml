@@ -6,6 +6,7 @@ engine_fqdn: rhev-engine.example.com
 engine_username: admin@internal
 admin_password: changeme
 dc_name: Default
+storage_type: nfs
 
 data_storage_name: my_data_storage
 data_storage_address: www.example.com
