@@ -68,6 +68,10 @@ runcmd:
  - if [ $? -eq 0 ]; then echo "HE_APPLIANCE_ENGINE_SETUP_SUCCESS" >/dev/virtio-ports/org.ovirt.hosted-engine-setup.0; else echo "HE_APPLIANCE_ENGINE_SETUP_FAIL" >/dev/virtio-ports/org.ovirt.hosted-engine-setup.0; fi
  - systemctl mask cloud-init-local ||  chkconfig cloud-init-local off
  - systemctl mask cloud-init || ( chkconfig cloud-init off && chkconfig cloud-config off && chkconfig cloud-final off )
- - echo "Installing Python Enum Package"
- - yum -y install python-enum34
+ - echo "Installing additional packages" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - yum -y install python-enum34 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+{% if ansible_distribution == 'Red Hat Enterprise Linux' %}
+ - yum -y install katello-agent 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+{% endif %}
+ - yum -y update 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - echo "Configuration complete"
