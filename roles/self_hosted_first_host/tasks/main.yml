@@ -7,6 +7,8 @@
       - '{{ "ovirt-engine-appliance" if ansible_distribution == "CentOS" else "rhevm-appliance" }}'
       - glusterfs-fuse
       - ovirt-hosted-engine-setup
+  async: 7200
+  poll: 60
   tags:
     - packages
 

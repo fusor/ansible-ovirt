@@ -6,6 +6,8 @@
       - '{{ "ovirt-engine" if ansible_distribution == "CentOS" else "rhevm" }}'
       - glusterfs-fuse
       - python-enum34
+  async: 3600
+  poll: 30
   tags:
     - packages
 
