@@ -6,6 +6,8 @@
     - ovirt-hosted-engine-setup
     - glusterfs-fuse
     - glusterfs-cli
+  async: 3600
+  poll: 30
   tags:
     - packages
 
