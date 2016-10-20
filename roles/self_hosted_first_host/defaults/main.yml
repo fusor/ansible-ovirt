@@ -11,7 +11,7 @@ storageDatacenterName: hosted_storage
 storage_type: nfs
 storage_domain_type: "{{ 'nfs3' if storage_type == 'nfs' else storage_type }}"
 hosted_storage_name: my_hosted_storage
-hosted_storage_addrees: www.example.com
+hosted_storage_addrees: localhost
 hosted_storage_path: /path/to/storage
 mac_address: '11:22:33:44:55:66'
 engine_mac_address: '00:11:22:33:44:55'
@@ -22,7 +22,7 @@ config_dir: /etc/ansible-ovirt
 
 
 # user-data
-engine_db_host: www.example.com
+engine_db_host: localhost
 engine_db_user: root
 engine_db_port: 5432
 engine_db_password: dbpassword
