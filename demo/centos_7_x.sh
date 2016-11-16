@@ -7,6 +7,7 @@ fi
 (set -x
 
 echo "changeme" | passwd root --stdin
+systemctl start firewalld
 firewall-cmd --zone=public --add-port=80/tcp --permanent
 firewall-cmd --zone=public --add-port=443/tcp --permanent
 firewall-cmd --reload
@@ -28,3 +29,15 @@ cp -R /home/vagrant/.ssh /root/.ssh
 yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release40.rpm
 
 )
+
+# Enable password based SSH auth
+if ! grep -q "^PasswordAuthentication yes" /etc/ssh/sshd_config ; then
+  sed -i -e '/^PasswordAuthentication/s/^.*$/PasswordAuthentication yes/' /etc/ssh/sshd_config
+fi
+# Enable root logon
+if  ! grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config ; then
+  sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
+fi
+/sbin/service sshd restart
+
+
