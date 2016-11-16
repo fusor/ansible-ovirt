@@ -19,6 +19,14 @@
   tags:
     - setup
 
+- name: restart network service to pick up correct network scripts
+  service:
+    name: network
+    enabled: yes
+    state: restarted
+  tags:
+    - setup
+
 - name: create config directory
   file:
       path: '{{ config_dir }}'
