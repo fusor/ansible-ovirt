@@ -7,6 +7,7 @@
     - wait_for_host_up
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
+    - wait_for_yum_lock
     - engine
     - { role: wait_for_engine, tags: ['config'] }
     - datacenter
@@ -18,6 +19,7 @@
     - wait_for_host_up
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
+    - wait_for_yum_lock
     - hypervisor
     - { role: wait_for_engine, tags: ['config'] }
     - { role: register_hypervisor, script_runner: '{{ engine_fqdn }}' }

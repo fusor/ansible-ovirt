@@ -1,0 +1,13 @@
+---
+
+- name: Wait until existing yum tasks complete
+  stat:
+    path: /var/run/yum.pid
+  register: result
+  until: result['stat']['exists'] == false
+  retries: 10
+  delay: 30
+  changed_when: false
+  failed_when: false
+  tags:
+    - packages
