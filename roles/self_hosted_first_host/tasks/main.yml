@@ -129,6 +129,6 @@
     hosted-engine --deploy --config-append={{ config_dir }}/answers
   async: 12000
   poll: 30
-  when: installed|failed
+  when: '{{ installed.rc > 0 }}'
   tags:
     - install
