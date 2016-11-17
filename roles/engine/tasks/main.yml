@@ -3,7 +3,7 @@
 - name: Install dependences
   yum: name={{ item }} state=present
   with_items:
-      - '{{ "ovirt-engine" if ansible_distribution == "CentOS" else "rhevm" }}'
+      - '{{ "rhevm" if ansible_distribution == "RedHat" else "ovirt-engine" }}'
       - glusterfs-fuse
       - python-enum34
   async: 3600

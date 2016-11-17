@@ -4,7 +4,7 @@
   yum: name={{ item }} state=present
   with_items:
       - genisoimage
-      - '{{ "ovirt-engine-appliance" if ansible_distribution == "CentOS" else "rhevm-appliance" }}'
+      - '{{ "rhevm-appliance" if ansible_distribution == "RedHat" else "ovirt-engine-appliance" }}'
       - glusterfs-fuse
       - ovirt-hosted-engine-setup
       - ebtables-2.0.10-13.el7.x86_64

@@ -36,7 +36,7 @@ write_files:
    owner: root:root
    permissions: '0640'
 
-{% if ansible_distribution == 'Red Hat Enterprise Linux' %}
+{% if ansible_distribution == 'RedHat' %}
  - content: |
      if  ! grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config ; then
        sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -52,7 +52,7 @@ write_files:
 {% endif %}
 
 runcmd:
-{% if ansible_distribution == 'Red Hat Enterprise Linux' %}
+{% if ansible_distribution == 'RedHat' %}
  - echo "Enabling ssh access" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - bash -e /root/fix_ssh.sh 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - sed -i -e '$aAllowUsers root'
@@ -70,7 +70,7 @@ runcmd:
  - systemctl mask cloud-init || ( chkconfig cloud-init off && chkconfig cloud-config off && chkconfig cloud-final off )
  - echo "Installing additional packages" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - yum -y install python-enum34 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
-{% if ansible_distribution == 'Red Hat Enterprise Linux' %}
+{% if ansible_distribution == 'RedHat' %}
  - yum -y install katello-agent 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
 {% endif %}
  - yum -y update 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
