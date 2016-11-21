@@ -61,7 +61,7 @@ runcmd:
  - subscription-manager register --org="Default_Organization" --name="{{ engine_fqdn }}" --activationkey="{{ engine_activation_key }}" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - echo "Enabling repositories" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - subscription-manager repos --disable "*" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
- - subscription-manager repos --enable {{ engine_repositories | join(' --enable ') }} %> 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - subscription-manager repos --enable {{ engine_repositories|join(' --enable ') }} 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
 {% endif %}
  - echo "Running engine setup" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - /usr/bin/engine-setup --offline --config-append=/root/answers 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
