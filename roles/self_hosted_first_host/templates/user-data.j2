@@ -52,6 +52,9 @@ write_files:
 {% endif %}
 
 runcmd:
+ - echo "Running engine setup" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - /usr/bin/engine-setup --offline --config-append=/root/answers 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - echo "Installing additional packages" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
 {% if ansible_distribution == 'RedHat' %}
  - echo "Enabling ssh access" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - bash -e /root/fix_ssh.sh 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
@@ -62,16 +65,11 @@ runcmd:
  - echo "Enabling repositories" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - subscription-manager repos --disable "*" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - subscription-manager repos --enable {{ engine_repositories|join(' --enable ') }} 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - yum -y install katello-agent 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
 {% endif %}
- - echo "Running engine setup" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
- - /usr/bin/engine-setup --offline --config-append=/root/answers 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - yum -y install python-enum34 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - yum -y update 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
+ - echo "Configuration complete"
  - if [ $? -eq 0 ]; then echo "HE_APPLIANCE_ENGINE_SETUP_SUCCESS" >/dev/virtio-ports/org.ovirt.hosted-engine-setup.0; else echo "HE_APPLIANCE_ENGINE_SETUP_FAIL" >/dev/virtio-ports/org.ovirt.hosted-engine-setup.0; fi
  - systemctl mask cloud-init-local ||  chkconfig cloud-init-local off
  - systemctl mask cloud-init || ( chkconfig cloud-init off && chkconfig cloud-config off && chkconfig cloud-final off )
- - echo "Installing additional packages" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
- - yum -y install python-enum34 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
-{% if ansible_distribution == 'RedHat' %}
- - yum -y install katello-agent 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
-{% endif %}
- - yum -y update 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
- - echo "Configuration complete"
