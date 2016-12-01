@@ -62,6 +62,14 @@
   tags:
     - setup
 
+- name: Copy authorised ssh keys from the hypervisor
+  command: cat ~/.ssh/authorized_keys
+  register: hypervisor_authorized_keys
+  when: '{{ ssh_authorized_key == None }}'
+- name: Set authorized ssh key if not provided
+  set_fact: ssh_authorized_key={{ hypervisor_authorized_keys.stdout }}
+  when: '{{ ssh_authorized_key == None }}'
+
 - name: create config directory
   file:
       path: '{{ config_dir }}'

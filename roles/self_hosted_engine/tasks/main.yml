@@ -1,0 +1,9 @@
+---
+
+- name: Install python-enum34
+  yum: name=python-enum34  state=present
+
+- name: Update all packages
+  yum: name=* state=latest
+  async: 3600
+  poll: 5
