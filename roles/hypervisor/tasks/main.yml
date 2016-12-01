@@ -7,6 +7,6 @@
     - glusterfs-fuse
     - glusterfs-cli
   async: 3600
-  poll: 30
+  poll: 5
   tags:
     - packages

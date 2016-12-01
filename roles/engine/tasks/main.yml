@@ -7,7 +7,7 @@
       - glusterfs-fuse
       - python-enum34
   async: 3600
-  poll: 30
+  poll: 5
   tags:
     - packages
 
@@ -54,7 +54,7 @@
   shell: |
     engine-setup --offline --config-append={{ config_dir }}/answers
   async: 12000
-  poll: 30
+  poll: 5
   when: '{{ installed.rc > 0 }}'
   tags:
     - install

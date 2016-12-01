@@ -11,7 +11,7 @@
       - ovirt-hosted-engine-setup
       - ebtables-2.0.10-13.el7.x86_64
   async: 7200
-  poll: 60
+  poll: 5
   tags:
     - packages
 
@@ -130,7 +130,7 @@
   shell: |
     hosted-engine --deploy --config-append={{ config_dir }}/answers
   async: 12000
-  poll: 30
+  poll: 5
   when: '{{ installed.rc > 0 }}'
   tags:
     - install
