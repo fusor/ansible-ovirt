@@ -8,4 +8,5 @@ hosted_storage_addrees: www.example.com
 config_dir: /etc/ansible-ovirt
 hosted_storage_path: /path/to/storage
 admin_password: changeme
-host_id: 1
+host_id: 2
+host_name: hosted_engine_{{ host_id }}

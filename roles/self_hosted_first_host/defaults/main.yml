@@ -7,7 +7,7 @@ engine_vm_cpus: 2
 engine_setup_timeout: 3600
 gateway: '192.168.1.1'
 cluster_name: Default
-storageDatacenterName: hosted_storage
+storage_datacenter_name: hosted_storage
 storage_type: nfs
 storage_domain_type: "{{ 'nfs3' if storage_type == 'nfs' else storage_type }}"
 hosted_storage_name: my_hosted_storage
@@ -19,7 +19,8 @@ cpu_model: model_Nehalem
 root_password: changeme
 admin_password: changeme
 config_dir: /etc/ansible-ovirt
-
+host_id: 1
+host_name: hosted_engine_{{ host_id }}
 
 # user-data
 engine_db_host: localhost
