@@ -11,7 +11,7 @@ OVEHOSTED_NETWORK/bridgeIf=str:{{ provisioning_interface.stdout }}
 OVEHOSTED_NETWORK/gateway=str:{{ gateway }}
 OVEHOSTED_ENGINE/insecureSSL=none:None
 OVEHOSTED_ENGINE/clusterName=str:{{ cluster_name }}
-OVEHOSTED_STORAGE/storageDatacenterName=str:{{ dc_name }}
+OVEHOSTED_STORAGE/storageDatacenterName=str:{{ storage_datacenter_name }}
 OVEHOSTED_STORAGE/domainType=str:{{ storage_domain_type }}
 OVEHOSTED_STORAGE/glusterBrick=none:None
 OVEHOSTED_STORAGE/LunID=none:None
@@ -48,6 +48,7 @@ OVEHOSTED_VM/cloudinitExecuteEngineSetup=bool:True
 OVEHOSTED_VM/cloudinitRootPwd=str:{{ root_password }}
 OVEHOSTED_ENGINE/adminPassword=str:{{ admin_password }}
 OVEHOSTED_ENGINE/engineSetupTimeout=int:{{ engine_setup_timeout }}
+OVEHOSTED_ENGINE/appHostName=str:{{ host_name }}
 
 NETWORK/sshEnable=bool:True
 NETWORK/sshUser=str:root
