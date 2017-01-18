@@ -29,7 +29,7 @@ def main():
         transfer_image(transfers_service, disk.id, args.image_path)
         wait_for_disk(disks_service, disk)
     except Exception as e:
-        if '409' not in ' '.join(e.args):
+        if '409' not in ' '.join(map(str, e.args)):
             raise
 
 
