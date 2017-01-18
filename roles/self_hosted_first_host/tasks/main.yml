@@ -9,7 +9,7 @@
       - '{{ "rhevm-appliance" if ansible_distribution == "RedHat" else "ovirt-engine-appliance" }}'
       - glusterfs-fuse
       - ovirt-hosted-engine-setup
-      - ebtables-2.0.10-13.el7.x86_64
+      - ebtables
   async: 7200
   poll: 5
   tags:
