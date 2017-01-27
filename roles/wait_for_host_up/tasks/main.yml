@@ -1,7 +1,17 @@
 ---
 
 - name: wait for SSH to respond on host
-  local_action: wait_for port=22 host={{ inventory_hostname }} timeout={{ timeout if timeout is defined else 300 }}
+  local_action: wait_for port=22 host={{ inventory_hostname }} timeout={{ timeout }}
+
+- name: Set the user variable so local-action works
+  set_fact: user={{ ansible_user }}
+
+- name: Ensure SSH user on host is configured
+  local_action: command ssh {{ user }}@{{ inventory_hostname }} {{ "-i " +  private_key_path if private_key_path else "" }} {{ extra_ssh_args }} exit
+  register: ssh_result
+  until: ssh_result.rc == 0
+  retries: 30
+  delay: 5
 
 
 - name: Gather facts
