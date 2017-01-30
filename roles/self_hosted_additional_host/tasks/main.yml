@@ -43,3 +43,8 @@
   poll: 5
   tags:
     - install
+
+- name: Restart imageio-daemon
+  service:
+    name: ovirt-imageio-daemon
+    state: restarted
