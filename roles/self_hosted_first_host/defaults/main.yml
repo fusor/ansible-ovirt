@@ -6,6 +6,7 @@ engine_vm_ram: 4096
 engine_vm_cpus: 2
 engine_setup_timeout: 3600
 gateway: '192.168.1.1'
+dc_name: Default
 cluster_name: Default
 storage_datacenter_name: hosted_storage
 storage_type: nfs
@@ -27,8 +28,6 @@ engine_db_host: localhost
 engine_db_user: root
 engine_db_port: 5432
 engine_db_password: dbpassword
-satellite_fqdn: satellite.example.com
-engine_activation_key: 1-22222-33333
 engine_organization: localdomain
 engine_application_mode: virt
-engine_repositories: []
+ssh_authorized_key: null

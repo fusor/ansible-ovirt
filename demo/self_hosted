@@ -1,6 +1,11 @@
 [self_hosted_first_host]
 x1.example.org host_id=1 mac_address=52:11:22:33:44:41
 
+[self_hosted_engine]
+ovirt-engine.example.org
+
+[self_hosted_engine:vars]
+register_to_satellite=false
 
 [self_hosted_additional_hosts]
 x2.example.org host_id=2 mac_address=52:11:22:33:44:42
