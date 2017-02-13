@@ -20,7 +20,7 @@
                                       --password='{{ admin_password }}'
                                       --disk-name='{{ item.1.name }}'
                                       --disk-size={{ item.1.size }}
-                                      --image={{ item.1.image_path }}
+                                      --image={{ image_path }}
                                       --storage-domain='{{ data_storage_name }}'
   register: image_upload_jobs
   async: 3600
