@@ -33,6 +33,7 @@
 
 - hosts: created_vms
   remote_user: '{{ username }}'
+  serial: 1
   gather_facts: no
   become: true
   roles:
