@@ -5,12 +5,8 @@
   pre_tasks:
     - name: install packages
       yum: name={{ item }} state=present
-      with_items: '{{ packages }}'
-      when: '{{ packages|length > 0 }}'
-
-    - name: find the path to the rhel 7 guest image qcow2
-      shell: find /usr/share/rhel-guest-image-7 -name 'rhel-guest-image-*.qcow2'
-      register: image_path_register
+      with_items: '{{ packages if packages is defined else [] }}'
+      when: '{{ packages is defined and packages|length > 0 }}'
 
     - name: authenticate to engine
       ovirt_auth:
@@ -19,7 +15,7 @@
         url: https://{{ engine_fqdn }}/ovirt-engine/api
         insecure: true
   roles:
-    - { role: launch_vms, image_path: '{{ image_path_register.stdout }}', when: '{{ vms is defined }}' }
+    - { role: launch_vms, when: '{{ vms is defined }}' }
   post_tasks:
     - name: add created vms to the inventory
       add_host:
