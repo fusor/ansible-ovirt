@@ -27,7 +27,7 @@
   with_subelements:
     - '{{ vms }}'
     - disks
-  when: item.1.get("image_path")
+  when: item.1.get("bootable")
 
 - name: Wait for image uploads to complete
   async_status: jid={{ item.ansible_job_id }}
