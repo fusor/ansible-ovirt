@@ -5,8 +5,8 @@
   pre_tasks:
     - name: install packages
       yum: name={{ item }} state=present
-      with_items: '{{ packages }}'
-      when: '{{ packages|length > 0 }}'
+      with_items: '{{ packages if packages is defined else [] }}'
+      when: '{{ packages is defined and packages|length > 0 }}'
 
     - name: authenticate to engine
       ovirt_auth:
