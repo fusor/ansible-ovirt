@@ -5,6 +5,10 @@ from ovirtsdk.api import API
 from ovirtsdk.xml import params
 from ovirtsdk.infrastructure.errors import RequestError
 
+DEFAULT_DC = 'Default'
+DEFAULT_CLUSTER = 'Default'
+DEFAULT_CPU_PROFILE = 'Default'
+
 
 def main():
     args = parse_args()
@@ -17,7 +21,11 @@ def main():
     major, minor = args.comp_version.split('.')
     version = params.Version(major=major, minor=minor)
     print "Creating DataCenter"
-    datacenter = create_datacenter(engine_api, args.dc_name, version)
+    if args.dc_name != DEFAULT_DC:
+        datacenter = update_datacenter(engine_api, args.dc_name, version)
+        create_datacenter(engine_api, DEFAULT_DC, version)
+    else:
+        datacenter = engine_api.datacenters.get(name=DEFAULT_DC)
     if args.mac_address_range and args.mac_pool_name:
         print('Creating mac address pool')
         mac_pool = create_mac_pool(
@@ -27,8 +35,11 @@ def main():
         )
         assign_mac_pool(datacenter, mac_pool)
     print("Creating Cluster")
-    create_cluster(engine_api, datacenter, args.cluster_name,
-                   args.cpu_type, version)
+    if args.cluster_name != DEFAULT_CLUSTER:
+        update_cluster(engine_api, args.cluster_name,
+                       args.cpu_type, version)
+        create_cluster(engine_api, datacenter, DEFAULT_CLUSTER,
+                       args.cpu_type, version)
 
 
 def parse_args():
@@ -90,11 +101,21 @@ def create_datacenter(engine_api, name, version):
         version=version
     )
     try:
-        return (engine_api.datacenters.get(name=name) or
-                engine_api.datacenters.add(dc_params))
+        (engine_api.datacenters.get(name=name) or
+         engine_api.datacenters.add(dc_params))
     except Exception as e:
         print 'Failed to create NFS Data Center:\n%s' % str(e)
         exit(1)
+
+
+def update_datacenter(engine_api, name, version):
+    datacenter = engine_api.datacenters.get(name=name)
+    if not datacenter:
+        datacenter = engine_api.datacenters.get(name=DEFAULT_DC)
+        datacenter.set_name(name)
+        datacenter.set_version(version)
+        datacenter.update()
+    return datacenter
 
 
 def create_mac_pool(engine_api, mac_pool_name, mac_address_range):
@@ -155,6 +176,23 @@ def create_cluster(engine_api, datacenter, cluster_name, cpu_type, version):
     except Exception as e:
         print 'Failed to create Cluster:\n%s' % str(e)
         exit(1)
+
+
+def update_cluster(engine_api, cluster_name, cpu_type, version):
+    cluster = engine_api.clusters.get(name=cluster_name)
+    if not cluster:
+        cluster = engine_api.clusters.get(name=DEFAULT_CLUSTER)
+        cluster.set_name(cluster_name)
+        cpu_params = params.CPU(id=cpu_type)
+        cluster.set_cpu(cpu_params)
+        cluster.set_version(version)
+        cluster.update()
+
+        # update the cpu profile name
+        cpu_profile = cluster.cpuprofiles.get(name=DEFAULT_CPU_PROFILE)
+        profile = engine_api.cpuprofiles.get(id=cpu_profile.get_id())
+        profile.set_name(cluster_name)
+        profile.update()
 
 
 if __name__ == '__main__':
