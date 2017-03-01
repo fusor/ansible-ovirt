@@ -1,5 +1,5 @@
 Name:       ansible-ovirt
-Version:    1.1.0
+Version:    1.2.0
 Release:    1%{?dist}
 Summary:    Ansible module for installing and configuring Ovirt/RHV
 Group:      Applications/System
