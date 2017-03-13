@@ -5,8 +5,8 @@ engine_fqdn: ovirt-engine.example.com
 engine_vm_ram: 4096
 engine_vm_cpus: 2
 engine_setup_timeout: 3600
-gateway: '192.168.1.1'
-dc_name: Default
+gateway: '{{ ansible_default_ipv4.gateway }}'
+interface_name: '{{ ansible_default_ipv4.interface }}'
 cluster_name: Default
 storage_datacenter_name: hosted_storage
 storage_type: nfs
@@ -14,7 +14,6 @@ storage_domain_type: "{{ 'nfs3' if storage_type == 'nfs' else storage_type }}"
 hosted_storage_name: my_hosted_storage
 hosted_storage_addrees: localhost
 hosted_storage_path: /path/to/storage
-mac_address: '11:22:33:44:55:66'
 engine_mac_address: '00:11:22:33:44:55'
 cpu_model: model_Nehalem
 root_password: changeme

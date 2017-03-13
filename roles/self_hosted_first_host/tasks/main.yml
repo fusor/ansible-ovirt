@@ -45,17 +45,9 @@
   tags:
     - setup
 
-
 - name: Find the path to the appliance image
   shell: find /usr/share/ovirt-engine-appliance -name '*-appliance-*.ova'
   register: engine_appliance
-  tags:
-    - setup
-
-- name: get the provisioning nic for the machine
-  shell: |
-    ip addr | grep -Pzo '^[0-9]+:(.*):.*\n.*{{ mac_address }}.*' | sed -r -n 's/[0-9]+: (.*):.*/\1/p' | head -n1
-  register: provisioning_interface
   tags:
     - setup
 
@@ -63,6 +55,7 @@
   command: cat ~/.ssh/authorized_keys
   register: hypervisor_authorized_keys
   when: '{{ ssh_authorized_key == None }}'
+
 - name: Set authorized ssh key if not provided
   set_fact: ssh_authorized_key={{ hypervisor_authorized_keys.stdout }}
   when: '{{ ssh_authorized_key == None }}'

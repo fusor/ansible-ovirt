@@ -1,8 +1,8 @@
-mac_address: '00:11:22:33:44:55'
 storage_type: nfs
 storage_domain_type: "{{ 'nfs3' if storage_type == 'nfs' else storage_type }}"
 cpu_model: model_Nehalem
-gateway: '192.168.1.1'
+gateway: '{{ ansible_default_ipv4.gateway}}'
+interface_name: '{{ ansible_default_ipv4.interface }}'
 hosted_storage_name: my_hosted_storage
 hosted_storage_addrees: www.example.com
 config_dir: /etc/ansible-ovirt
