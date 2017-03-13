@@ -8,7 +8,7 @@ admin_password: changeme
 
 dc_name: Default
 cluster_name: Default
-compatibility_version: 3.6
+compatibility_version: 4.0
 cpu_type: Intel Nehalem Family
 mac_address_range: ''
 mac_pool_name: ''
