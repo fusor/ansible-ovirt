@@ -23,36 +23,34 @@ def main():
         insecure=True
     )
 
-    add_host(engine_api, args.host, args.cluster, args.host_password)
-    wait_for_vdsm_host_up(engine_api, args.host)
+    add_host(engine_api, args.host_name, args.host, args.cluster, args.host_password)
+    wait_for_vdsm_host_up(engine_api, args.host_name)
 
 
 def parse_args():
-    from optparse import OptionParser
-    parser = OptionParser()
+    import argparse
 
-    parser.add_option('--url', dest='url',
-                      help='the url for the Engine api')
-    parser.add_option('--username', dest='username',
-                      help='the username for the Engine api')
-    parser.add_option('--password', dest='password',
-                      help='the password for the Engine api')
-    parser.add_option('--host', dest='host',
-                      help='the address or hostname of the hypervisor host')
-    parser.add_option('--host-password', dest='host_password',
-                      help='the root password for the hypervisor')
-    parser.add_option('--cluster', dest='cluster',
-                      help='the name of the cluster to add the hypervisor to')
+    parser = argparse.ArgumentParser()
 
-    (options, args) = parser.parse_args()
+    parser.add_argument('--url', dest='url', required=True,
+                        help='the url for the Engine api')
+    parser.add_argument('--username', dest='username', required=True,
+                        help='the username for the Engine api')
+    parser.add_argument('--password', dest='password', required=True,
+                        help='the password for the Engine api')
+    parser.add_argument('--host', dest='host', required=True,
+                        help='the ip address or fqdn of the hypervisor host')
+    parser.add_argument('--host-name', dest='host_name', required=False,
+                        help='the host logic name')
+    parser.add_argument('--host-password', dest='host_password', required=True,
+                        help='the root password for the hypervisor')
+    parser.add_argument('--cluster', dest='cluster', required=True,
+                        help='the name of the cluster to add the hypervisor to')
 
-    if not all(options.__dict__.values()):
-        print('Not all required options were provided')
-        actual = [key for (key, value) in options.__dict__.items() if value]
-        print('Got: {}'.format(', '.join(actual)))
-        print('Expected: {}'.format(', '.join(options.__dict__.keys())))
-        exit(1)
-    return options
+    args = parser.parse_args()
+    if not args.host_name:
+        args.host_name = args.host
+    return args
 
 
 def get_api(url=None, user=None, password=None, insecure=False, timeout=30):
@@ -69,26 +67,26 @@ def get_api(url=None, user=None, password=None, insecure=False, timeout=30):
             time.sleep(10)
 
 
-def add_host(engine_api, host, cluster_name, password):
+def add_host(engine_api, host_name, host, cluster_name, password):
     host_params = params.Host(
-        name=host,
+        name=host_name,
         address=host,
         cluster=engine_api.clusters.get(cluster_name),
         root_password=password,
         override_iptables=True
     )
 
-    installed_host = (engine_api.hosts.get(name=host) or
+    installed_host = (engine_api.hosts.get(name=host_name) or
                       engine_api.hosts.add(host_params))
 
     return installed_host
 
 
-def wait_for_vdsm_host_up(engine_api, host, retries=600, delay=5):
+def wait_for_vdsm_host_up(engine_api, host_name, retries=600, delay=5):
     for i in range(retries):
         state = None
         try:
-            state = engine_api.hosts.get(host).status.state
+            state = engine_api.hosts.get(host_name).status.state
         except Exception as e:
             print 'Error fetching host state: {}'.format(e)
         else:

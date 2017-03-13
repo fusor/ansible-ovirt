@@ -25,6 +25,7 @@
                                       --username='{{ engine_username }}'
                                       --password='{{ admin_password }}'
                                       --host='{{ inventory_hostname }}'
+                                      --host-name='{{ host_name if host_name is defined else "" }}'
                                       --host-password='{{ root_password }}'
                                       --cluster='{{ cluster_name }}'
   retries: 5
