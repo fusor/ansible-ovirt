@@ -21,6 +21,8 @@ admin_password: changeme
 config_dir: /etc/ansible-ovirt
 host_id: 1
 host_name: hosted_engine_{{ host_id }}
+compatibility_version: 4.0
+package_name: "{{ 'rhevm-appliance' if compatibility_version < 4.1 else 'rhvm-appliance' }}"
 
 # user-data
 engine_db_host: localhost
