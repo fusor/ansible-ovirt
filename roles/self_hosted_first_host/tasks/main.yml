@@ -12,22 +12,6 @@
   tags:
     - packages
 
-- name: Stop and disable NetworkManager
-  service:
-      name: NetworkManager
-      enabled: no
-      state: stopped
-  tags:
-    - setup
-
-- name: restart network service to pick up correct network scripts
-  service:
-    name: network
-    enabled: yes
-    state: restarted
-  tags:
-    - setup
-
 - name: Create qemu group
   group:
       name: qemu
