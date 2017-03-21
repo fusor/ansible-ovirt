@@ -15,7 +15,7 @@
   gather_facts: no
   roles:
     - wait_for_host_up
-    - { role: satellite_registration, when: '{{ register_to_satellite }}'}
+    - { role: satellite_registration, when: '{{ register_to_satellite is defined and register_to_satellite }}'}
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - { role: wait_for_engine, tags: ['config'] }
     - datacenter
