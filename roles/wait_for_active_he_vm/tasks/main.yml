@@ -1,0 +1,26 @@
+---
+
+- name: ensure the script directory exists
+  file:
+    path: '{{ config_dir }}/scripts'
+    state: directory
+    recurse: yes
+    mode: 0700
+  tags:
+    - config
+
+- name: copy wait for active hosted engine vm script
+  copy:
+    src: files/wait_for_active_he_vm
+    dest: '{{ config_dir }}/scripts/wait_for_active_he_vm'
+    mode: 0700
+  tags:
+    - config
+
+- name: wait for active hosted engine vm
+  command: >
+    {{ config_dir }}/scripts/wait_for_active_he_vm --url='https://{{ engine_fqdn }}/ovirt-engine/api'
+                                                   --username='{{ engine_username }}'
+                                                   --password='{{ admin_password }}'
+  tags:
+    - config

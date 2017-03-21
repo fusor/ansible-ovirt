@@ -1,0 +1,6 @@
+---
+
+config_dir: /etc/ansible-ovirt
+engine_fqdn: rhev-engine.example.com
+engine_username: admin@internal
+admin_password: changeme

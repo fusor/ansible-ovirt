@@ -21,6 +21,7 @@
     - datacenter
     - storage
     - self_hosted_engine
+    - wait_for_active_he_vm
 
 - hosts: self_hosted_additional_hosts
   remote_user: root

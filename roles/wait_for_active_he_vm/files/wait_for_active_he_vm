@@ -1,0 +1,66 @@
+#! /usr/bin/env python
+
+import time
+from ovirtsdk.api import API
+
+
+def main():
+    args = parse_args()
+    engine_api = get_api(
+        url=args.url,
+        user=args.username,
+        password=args.password,
+        insecure=True
+    )
+    wait_for_he_vm_up_state(engine_api)
+
+
+def parse_args():
+    import argparse
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--url', dest='url', required=True,
+                        help='the url for the Engine api')
+    parser.add_argument('--username', dest='username', required=True,
+                        help='the username for the Engine api')
+    parser.add_argument('--password', dest='password', required=True,
+                        help='the password for the Engine api')
+    args = parser.parse_args()
+    return args
+
+
+def get_api(url=None, user=None, password=None, insecure=False, timeout=30):
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            return API(
+                url=url,
+                username=user,
+                password=password,
+                insecure=insecure
+            )
+        except Exception:
+            time.sleep(10)
+
+
+def wait_for_he_vm_up_state(engine_api):
+    timeout = 600
+    vm_name = 'HostedEngine'
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            hosted_vm = engine_api.vms.get(name=vm_name)
+            if hosted_vm.status.state == 'up':
+                print('Hosted vm %s reached the "up" status' % vm_name)
+                return
+        except Exception:
+            pass
+        print('Waiting for %s to reach the "up" state' % vm_name)
+        time.sleep(10)
+    print('Hosted vm %s failed to reach the "up" state' % vm_name)
+    exit(1)
+
+
+if __name__ == '__main__':
+    main()
