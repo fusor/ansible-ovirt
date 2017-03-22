@@ -20,7 +20,7 @@
     - { role: wait_for_engine, tags: ['config'] }
     - datacenter
     - storage
-    - self_hosted_engine
+    - { role: self_hosted_engine, when: '{{ repositories|length > 0 }}'}
     - wait_for_active_he_vm
 
 - hosts: self_hosted_additional_hosts
