@@ -26,7 +26,7 @@
                                             --storage-name='{{ data_storage_name }}'
                                             --storage-path='{{ data_storage_path }}'
                                             --storage-address='{{ data_storage_address }}'
-                                            --storage-type='{{ storage_type }}'
+                                            --storage-type='{{ data_storage_type }}'
                                             --domain-type='data'
   retries: 5
   delay: 30
@@ -42,7 +42,7 @@
                                             --storage-name='{{ export_storage_name }}'
                                             --storage-path='{{ export_storage_path }}'
                                             --storage-address='{{ export_storage_address }}'
-                                            --storage-type='{{ storage_type }}'
+                                            --storage-type='{{ export_storage_type }}'
                                             --domain-type='export'
   when: create_export_domain
   retries: 5

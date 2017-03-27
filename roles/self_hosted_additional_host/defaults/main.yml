@@ -1,5 +1,5 @@
-storage_type: nfs
-storage_domain_type: "{{ 'nfs3' if storage_type == 'nfs' else storage_type }}"
+hosted_storage_type: nfs
+storage_domain_type: "{{ 'nfs3' if hosted_storage_type == 'nfs' else hosted_storage_type }}"
 cpu_model: model_Nehalem
 gateway: '{{ ansible_default_ipv4.gateway}}'
 interface_name: '{{ ansible_default_ipv4.interface }}'
