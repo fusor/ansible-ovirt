@@ -12,10 +12,19 @@
 
 - name: copy hypervisor registration script
   copy:
-    src: files/add_host
+    src: 'files/add_host{{ (compatibility_version < 4.1) | ternary("","_sdk4") }}'
     dest: '{{ config_dir }}/scripts/add_host'
     mode: 0700
   delegate_to: '{{ script_runner }}'
+  tags:
+    - config
+
+- name: Install python-ovirt-engine-sdk4
+  yum:
+    name: python-ovirt-engine-sdk4
+    state: present
+  delegate_to: '{{ script_runner }}'
+  when: compatibility_version >= 4.1
   tags:
     - config
 
@@ -28,6 +37,7 @@
                                       --host-name='{{ host_name if host_name is defined else "" }}'
                                       --host-password='{{ root_password }}'
                                       --cluster='{{ cluster_name }}'
+                                      '{{ deploy_hosted_engine_param }}'
   retries: 5
   delay: 30
   delegate_to: '{{ script_runner }}'

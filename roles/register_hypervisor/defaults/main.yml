@@ -7,3 +7,6 @@ engine_username: admin@internal
 admin_password: changeme
 root_password: changeme
 cluster_name: Default
+compatibility_version: 4.0
+deploy_hosted_engine: False
+deploy_hosted_engine_param: '{{ "--deploy-hosted-engine" if deploy_hosted_engine else "" }}'

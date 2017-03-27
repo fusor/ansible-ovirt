@@ -26,9 +26,12 @@
 - hosts: self_hosted_additional_hosts
   remote_user: root
   gather_facts: no
+  vars:
+    ovirt_engine_version: "{{ compatibility_version if compatibility_version is defined else '4.0' }}"
   roles:
     - wait_for_host_up
     - override_tty
     - { role: subscription, when: '{{ repositories|length > 0 }}'}
     - wait_for_yum_lock
-    - self_hosted_additional_host
+    - { role: self_hosted_additional_host, when: '{{ ovirt_engine_version < 4.1 }}' }
+    - { role: register_hypervisor, deploy_hosted_engine: True, when: '{{ ovirt_engine_version >= 4.1 }}' }
