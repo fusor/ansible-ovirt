@@ -31,4 +31,4 @@ engine_db_port: 5432
 engine_db_password: dbpassword
 engine_organization: localdomain
 engine_application_mode: virt
-ssh_authorized_key: null
+ssh_authorized_keys: []

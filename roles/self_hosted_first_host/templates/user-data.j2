@@ -5,7 +5,9 @@ disable_root: false
 ssh_pwauth: true
 
 ssh_authorized_keys:
-  - {{ ssh_authorized_key }}
+{% for key in ssh_authorized_keys %}
+  - {{ key }}
+{% endfor %}
 
 chpasswd:
   list: |
