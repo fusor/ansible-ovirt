@@ -12,8 +12,12 @@ storage_datacenter_name: hosted_storage
 hosted_storage_type: nfs
 storage_domain_type: "{{ 'nfs3' if hosted_storage_type == 'nfs' else hosted_storage_type }}"
 hosted_storage_name: my_hosted_storage
-hosted_storage_addrees: localhost
+hosted_storage_address: localhost
 hosted_storage_path: /path/to/storage
+hosted_storage_lun: none:None
+hosted_iscsi_portal_port: 3260
+hosted_iscsi_portal_ip_address: '{{ hosted_storage_address }}'
+
 engine_mac_address: '00:11:22:33:44:55'
 cpu_model: model_Nehalem
 root_password: changeme

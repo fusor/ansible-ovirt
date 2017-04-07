@@ -4,7 +4,7 @@ cpu_model: model_Nehalem
 gateway: '{{ ansible_default_ipv4.gateway}}'
 interface_name: '{{ ansible_default_ipv4.interface }}'
 hosted_storage_name: my_hosted_storage
-hosted_storage_addrees: www.example.com
+hosted_storage_address: www.example.com
 config_dir: /etc/ansible-ovirt
 hosted_storage_path: /path/to/storage
 admin_password: changeme
