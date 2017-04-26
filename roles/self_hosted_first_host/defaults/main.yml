@@ -2,8 +2,8 @@
 
 # self-hosted-answers
 engine_fqdn: ovirt-engine.example.com
-engine_vm_ram: 4096
-engine_vm_cpus: 2
+engine_vm_ram: "{{ 4096 if compatibility_version < 4.1 else 16384 }}"
+engine_vm_cpus: "{{ 2 if compatibility_version < 4.1 else 4 }}"
 engine_setup_timeout: 3600
 gateway: '{{ ansible_default_ipv4.gateway }}'
 interface_name: '{{ ansible_default_ipv4.interface }}'
