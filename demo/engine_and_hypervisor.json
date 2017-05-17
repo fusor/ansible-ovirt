@@ -5,7 +5,7 @@
   "export_storage_path": "/nfs_data/export",
   "hosted_storage_address": "nfs.example.org",
   "hosted_storage_path": "/nfs_data/self_hosted",
-  "engine_db_host": "x1.example.org",
+  "ovirt_engine_db_host": "x1.example.org",
   "engine_fqdn": "x1.example.org",
   "engine_username": "admin@internal",
   "gateway": "192.168.33.1",
