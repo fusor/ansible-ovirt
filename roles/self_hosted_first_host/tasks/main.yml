@@ -4,7 +4,7 @@
   yum: name={{ item }} state=present
   with_items:
       - genisoimage
-      - '{{ package_name if ansible_distribution == "RedHat" else "ovirt-engine-appliance" }}'
+      - '{{ "ovirt-engine-appliance" if product == "ovirt" else package_name }}'
       - glusterfs-fuse
       - ovirt-hosted-engine-setup
   async: 7200

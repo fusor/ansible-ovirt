@@ -27,6 +27,8 @@ config_dir: /etc/ansible-ovirt
 host_id: 1
 host_name: hosted_engine_{{ host_id }}
 compatibility_version: 4.0
+# product stand for decide to install ovirt/rhv appliance
+product: ovirt
 package_name: "{{ 'rhevm-appliance' if compatibility_version < 4.1 else 'rhvm-appliance' }}"
 ssh_authorized_keys: []
 engine_application_mode: virt
