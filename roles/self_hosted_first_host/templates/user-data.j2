@@ -14,6 +14,8 @@ chpasswd:
     root:{{ root_password }}
   expire: False
 
+timezone: {{ vm_timezone }}
+
 write_files:
  - content: |
      [environment:init]

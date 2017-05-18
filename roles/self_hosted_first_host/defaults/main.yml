@@ -17,6 +17,7 @@ hosted_storage_path: /path/to/storage
 hosted_storage_lun: none:None
 hosted_iscsi_portal_port: 3260
 hosted_iscsi_portal_ip_address: '{{ hosted_storage_address }}'
+vm_timezone: America/New_York
 
 engine_mac_address: '00:11:22:33:44:55'
 cpu_model: model_Nehalem
