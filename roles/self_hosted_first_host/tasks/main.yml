@@ -60,7 +60,7 @@
 
   - name: Set authorized ssh key if not provided
     set_fact: ssh_authorized_keys={{ hypervisor_authorized_keys.stdout_lines }}
-  when: '{{ ssh_authorized_keys == [] }}'
+  when: ssh_authorized_keys == []
 
 - name: create config directory
   file:
@@ -131,7 +131,7 @@
     hosted-engine --deploy --config-append={{ config_dir }}/answers
   async: 12000
   poll: 5
-  when: '{{ installed.rc > 0 }}'
+  when: installed.rc > 0
   tags:
     - install
 

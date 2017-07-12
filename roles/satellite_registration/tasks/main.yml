@@ -1,7 +1,9 @@
 ---
 
 - name: Get certificate from Satellite
-  yum: name=http://{{ satellite_fqdn }}/pub/katello-ca-consumer-latest.noarch.rpm state=present
+  yum:
+    name: http://{{ satellite_fqdn }}/pub/katello-ca-consumer-latest.noarch.rpm
+    state: present
 
 - name: Register to Satellite
   redhat_subscription:

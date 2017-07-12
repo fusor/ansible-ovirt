@@ -6,7 +6,7 @@
   roles:
     - wait_for_host_up
     - override_tty
-    - { role: subscription, when: '{{ repositories|length > 0 }}'}
+    - { role: subscription, when: repositories|length > 0 }
     - wait_for_yum_lock
     - self_hosted_first_host
 
@@ -15,12 +15,12 @@
   gather_facts: no
   roles:
     - wait_for_host_up
-    - { role: satellite_registration, when: '{{ register_to_satellite is defined and register_to_satellite }}'}
-    - { role: subscription, when: '{{ repositories|length > 0 }}'}
+    - { role: satellite_registration, when: register_to_satellite is defined and register_to_satellite }
+    - { role: subscription, when: repositories|length > 0 }
     - { role: wait_for_engine, tags: ['config'] }
     - datacenter
     - storage
-    - { role: self_hosted_engine, when: '{{ repositories|length > 0 }}'}
+    - { role: self_hosted_engine, when: repositories|length > 0 }
     - wait_for_active_he_vm
 
 - hosts: self_hosted_additional_hosts
@@ -31,7 +31,7 @@
   roles:
     - wait_for_host_up
     - override_tty
-    - { role: subscription, when: '{{ repositories|length > 0 }}'}
+    - { role: subscription, when: repositories|length > 0 }
     - wait_for_yum_lock
-    - { role: self_hosted_additional_host, when: '{{ ovirt_engine_version < 4.1 }}' }
-    - { role: register_hypervisor, deploy_hosted_engine: True, when: '{{ ovirt_engine_version >= 4.1 }}' }
+    - { role: self_hosted_additional_host, when: ovirt_engine_version < 4.1 }
+    - { role: register_hypervisor, deploy_hosted_engine: True, when: ovirt_engine_version >= 4.1 }
