@@ -30,7 +30,7 @@ write_files:
      OVESETUP_DB/port=int:{{ ovirt_engine_db_port }}
      OVESETUP_DB/database=str:{{ ovirt_engine_db_name }}
      OVESETUP_CONFIG/applicationMode=str:{{ engine_application_mode }}
-     OVESETUP_CONFIG/storageType=str:{{ hosted_storage_type }}
+     OVESETUP_CONFIG/storageType=str:{% if hosted_storage_type == 'fcp' %}fc{% elif hosted_storage_type == 'glusterfs' %}gluster{% else %}{{ hosted_storage_type }}{% endif %}{{ '' }}
      OVESETUP_DWH_CORE/enable=bool:True
      OVESETUP_DWH_CONFIG/scale=str:1
      OVESETUP_DWH_CONFIG/dwhDbBackupDir=str:/var/lib/ovirt-engine-dwh/backups

@@ -13,7 +13,7 @@ OVEHOSTED_ENGINE/insecureSSL=none:None
 OVEHOSTED_ENGINE/clusterName=str:Default
 OVEHOSTED_STORAGE/storageDatacenterName=str:{{ storage_datacenter_name }}
 OVEHOSTED_STORAGE/domainType=str:{{ storage_domain_type }}
-{% if hosted_storage_type in ('iscsi', 'fc') %}
+{% if hosted_storage_type in ('iscsi', 'fcp', 'fc') %}
 OVEHOSTED_STORAGE/LunID=str:{{ hosted_storage_lun }}
 {% else %}
 OVEHOSTED_STORAGE/storageDomainConnection=str:{{ hosted_storage_address }}:{{ hosted_storage_path }}
@@ -25,7 +25,7 @@ OVEHOSTED_STORAGE/iSCSIPortalUser=none:None
 OVEHOSTED_STORAGE/iSCSIPortal=none:None
 OVEHOSTED_STORAGE/iSCSITargetName=none:None
 {% endif %}
-{% if hosted_storage_type == 'gluster' %}
+{% if hosted_storage_type in ('glusterfs', 'gluster') %}
 OVEHOSTED_STORAGE/glusterProvisionedShareName=str:{{ hosted_storage_name }}
 OVEHOSTED_STORAGE/glusterProvisioningEnabled=bool:False
 OVEHOSTED_STORAGE/glusterBrick=none:None

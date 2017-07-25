@@ -10,7 +10,7 @@ interface_name: '{{ ansible_default_ipv4.interface }}'
 cluster_name: Default
 storage_datacenter_name: hosted_storage
 hosted_storage_type: nfs
-storage_domain_type: "{{ 'nfs3' if hosted_storage_type == 'nfs' else 'glusterfs' if hosted_storage_type == 'gluster' else hosted_storage_type }}"
+storage_domain_type: "{{ 'nfs3' if hosted_storage_type == 'nfs' else 'glusterfs' if hosted_storage_type == 'gluster' else 'fc' if hosted_storage_type == 'fcp' else hosted_storage_type }}"
 hosted_storage_name: my_hosted_storage
 hosted_storage_address: localhost
 hosted_storage_path: /path/to/storage
