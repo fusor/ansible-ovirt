@@ -51,6 +51,19 @@ write_files:
    owner: root:root
    permissions: '0640'
 
+{% if engine_vm_static_net_address %}
+bootcmd:
+{% for dns in engine_vm_static_net_dns_list %}
+ - echo "DNS{{loop.index}}={{ dns }}" >> {{ engine_vm_static_inet_file_path }}
+{% endfor %}
+ - if ! grep -Gq "^DOMAIN" {{ engine_vm_static_inet_file_path }}; then echo "DOMAIN={{ engine_vm_static_net_domain }}" >> {{ engine_vm_static_inet_file_path }}; fi
+ - if ! grep -Gq "^GATEWAY" {{ engine_vm_static_inet_file_path }}; then echo "GATEWAY={{ engine_vm_static_net_gateway }}" >> {{ engine_vm_static_inet_file_path }}; fi
+ - if ! grep -Gq "^DEFROUTE" {{ engine_vm_static_inet_file_path }}; then echo "DEFROUTE=yes" >> {{ engine_vm_static_inet_file_path }}; fi
+ - ifdown {{ engine_vm_static_inet_name }}
+ - ifup {{ engine_vm_static_inet_name }}
+{% endif %}
+
+
 runcmd:
  - echo "Running engine setup" 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1
  - /usr/bin/engine-setup --offline --config-append=/root/answers 1>/dev/virtio-ports/org.ovirt.hosted-engine-setup.0 2>&1

@@ -2,7 +2,7 @@
 
 - hosts: self_hosted_first_host
   remote_user: root
-  gather_facts: no
+  gather_facts: yes
   roles:
     - wait_for_host_up
     - override_tty

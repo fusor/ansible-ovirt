@@ -19,6 +19,16 @@ hosted_iscsi_portal_port: 3260
 hosted_iscsi_portal_ip_address: '{{ hosted_storage_address }}'
 vm_timezone: America/New_York
 
+engine_vm_static_net_address: ''
+engine_vm_static_inet_name: eth0
+engine_vm_static_inet_file_path: /etc/sysconfig/network-scripts/ifcfg-{{ engine_vm_static_inet_name }}
+engine_vm_static_net_dns_list: '{{ ansible_dns.nameservers }}'
+engine_vm_static_net_domain: '{{ ansible_domain }}'
+engine_vm_static_net_network: '{{ ansible_default_ipv4.network }}'
+engine_vm_static_net_netmask: '{{ ansible_default_ipv4.netmask }}'
+engine_vm_static_net_broadcast: '{{ ansible_default_ipv4.broadcast }}'
+engine_vm_static_net_gateway: '{{ ansible_default_ipv4.gateway }}'
+
 engine_mac_address: '00:11:22:33:44:55'
 cpu_model: model_Nehalem
 root_password: changeme

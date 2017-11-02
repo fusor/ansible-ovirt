@@ -1,2 +1,16 @@
 instance-id: 02a275f0-4913-4133-b2f4-b7a7ab8f5074
+{% if engine_vm_static_net_address %}
+network-interfaces: |
+  auto {{ engine_vm_static_inet_name }}
+  iface {{ engine_vm_static_inet_name }} inet static
+    address {{ engine_vm_static_net_address }}
+    network {{ engine_vm_static_net_network }}
+    netmask {{ engine_vm_static_net_netmask }}
+    broadcast {{ engine_vm_static_net_broadcast }}
+    gateway {{ engine_vm_static_net_gateway }}
+    dns_nameserver:
+{% for dns in engine_vm_static_net_dns_list %}
+      - {{ dns }}
+{% endfor %}
+{% endif %}
 local-hostname: {{ engine_fqdn }}
