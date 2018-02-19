@@ -128,7 +128,7 @@
 
 - name: Execute hosted-engine setup
   shell: |
-    hosted-engine --deploy --config-append={{ config_dir }}/answers
+    hosted-engine --deploy --config-append={{ config_dir }}/answers{{ "" if compatibility_version < 4.2 else " --noansible" }}
   async: 12000
   poll: 5
   when: installed.rc > 0
