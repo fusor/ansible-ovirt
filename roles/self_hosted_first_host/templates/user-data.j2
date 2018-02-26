@@ -51,9 +51,9 @@ write_files:
    owner: root:root
    permissions: '0640'
 
-{% if engine_vm_static_net_address %}
 bootcmd:
  - setenforce 0
+{% if engine_vm_static_net_address %}
 {% for dns in engine_vm_static_net_dns_list %}
  - echo "DNS{{loop.index}}={{ dns }}" >> {{ engine_vm_static_inet_file_path }}
 {% endfor %}
