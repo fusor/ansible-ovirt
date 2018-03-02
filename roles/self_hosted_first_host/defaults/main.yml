@@ -15,6 +15,8 @@ hosted_storage_name: my_hosted_storage
 hosted_storage_address: localhost
 hosted_storage_path: /path/to/storage
 hosted_storage_lun: none:None
+# create vg of hosted engine storage iscsi/fc you have 2 options Abort/Force
+force_create_vg: Abort
 hosted_iscsi_portal_port: 3260
 hosted_iscsi_portal_ip_address: '{{ hosted_storage_address }}'
 vm_timezone: America/New_York

@@ -15,6 +15,7 @@ OVEHOSTED_STORAGE/storageDatacenterName=str:{{ storage_datacenter_name }}
 OVEHOSTED_STORAGE/domainType=str:{{ storage_domain_type }}
 {% if hosted_storage_type in ('iscsi', 'fcp', 'fc') %}
 OVEHOSTED_STORAGE/LunID=str:{{ hosted_storage_lun }}
+OVEHOSTED_ENGINE/forceCreateVG=str:{{ force_create_vg }}
 {% else %}
 OVEHOSTED_STORAGE/storageDomainConnection=str:{{ hosted_storage_address }}:{{ hosted_storage_path }}
 {% endif %}
