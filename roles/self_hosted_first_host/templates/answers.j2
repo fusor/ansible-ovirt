@@ -26,6 +26,9 @@ OVEHOSTED_STORAGE/iSCSIPortalUser=none:None
 OVEHOSTED_STORAGE/iSCSIPortal=none:None
 OVEHOSTED_STORAGE/iSCSITargetName=none:None
 {% endif %}
+{% if hosted_storage_type == 'nfs' %}
+OVEHOSTED_STORAGE/nfsVersion=str:{{ nfs_storage_version }}
+{% endif %}
 {% if hosted_storage_type in ('glusterfs', 'gluster') %}
 OVEHOSTED_STORAGE/glusterProvisionedShareName=str:{{ hosted_storage_name }}
 OVEHOSTED_STORAGE/glusterProvisioningEnabled=bool:False
@@ -38,9 +41,11 @@ OVEHOSTED_VM/vmVCpus=str:{{ engine_vm_cpus }}
 OVEHOSTED_VM/ovfArchive=str:{{ engine_appliance.stdout  }}
 OVEHOSTED_VM/vmMACAddr=str:{{ engine_mac_address  }}
 OVEHOSTED_VM/emulatedMachine=str:rhel6.5.0
-OVEHOSTED_VM/vmCDRom=str:{{ config_dir }}/cloud_init/cloud.iso
+OVEHOSTED_VM/vmCDRom={{ 'none:None' if ansible_deploy else 'str:' + config_dir + '/cloud_init/cloud.iso' }}
 OVEHOSTED_VM/automateVMShutdown=bool:True
-OVEHOSTED_VM/cloudInitISO=str:existing
+OVEHOSTED_VM/cloudInitISO=str:{{ 'generate' if ansible_deploy else 'existing' }}
+OVEHOSTED_VM/cloudinitInstanceDomainName=str:{{ engine_domain }}
+OVEHOSTED_VM/cloudinitInstanceHostName=str:{{ engine_fqdn }}
 OVEHOSTED_VDSM/spicePkiSubject=str:C=EN, L=Test, O=Test, CN=Test
 OVEHOSTED_VDSM/caSubject=str:/C=EN/L=Test/O=Test/CN=TestCA
 OVEHOSTED_VDSM/cpu=str:{{ cpu_model }}
@@ -49,9 +54,10 @@ OVEHOSTED_NOTIF/smtpPort=str:25
 OVEHOSTED_NOTIF/smtpServer=str:localhost
 OVEHOSTED_NOTIF/sourceEmail=str:root@localhost
 OVEHOSTED_NOTIF/destEmail=str:root@localhost
-
+OVEHOSTED_VM/rootSshPubkey={{ 'str:' + root_ssh_pubkey if ansible_deploy else 'none:None' }}
 OVEHOSTED_VM/cloudinitExecuteEngineSetup=bool:True
-
+OVEHOSTED_VM/cloudinitVMStaticCIDR=str:{{ engine_vm_static_net_address }}
+OVEHOSTED_VM/cloudinitVMDNS={{ 'str' if engine_vm_static_net_dns_list else 'none' }}:{{ engine_vm_static_net_dns_list if engine_vm_static_net_dns_list else 'None' }}
 OVEHOSTED_VM/cloudinitRootPwd=str:{{ root_password }}
 OVEHOSTED_ENGINE/adminPassword=str:{{ admin_password }}
 OVEHOSTED_ENGINE/engineSetupTimeout=int:{{ engine_setup_timeout }}

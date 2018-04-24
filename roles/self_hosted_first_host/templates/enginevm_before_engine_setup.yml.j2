@@ -1,0 +1,30 @@
+---
+- name: Update the heanswer.conf file with our parameters
+  lineinfile:
+    dest: /root/heanswers.conf
+    regexp: "{{ '{{' }} line_to_replace.regexp {{ '}}' }}"
+    line: "{{ '{{' }} line_to_replace.line {{ '}}' }}"
+  with_items:
+    - { regexp: '^OVESETUP_CONFIG/adminPassword=', line: 'OVESETUP_CONFIG/adminPassword=str:{{ admin_password }}' }
+    - { regexp: '^OVESETUP_CONFIG/fqdn=', line: 'OVESETUP_CONFIG/fqdn=str:{{ engine_fqdn }}' }
+    - { regexp: '^OVESETUP_PKI/organization=', line: 'OVESETUP_PKI/organization=str:{{ engine_organization }}' }
+    - { regexp: '^OVESETUP_DB/host=', line: 'OVESETUP_DB/host=str:{{ ovirt_engine_db_host }}' }
+    - { regexp: '^OVESETUP_DB/user=', line: 'OVESETUP_DB/user=str:{{ ovirt_engine_db_user }}' }
+    - { regexp: '^OVESETUP_DB/password=', line: 'OVESETUP_DB/password=str:{{ ovirt_engine_db_password }}' }
+    - { regexp: '^OVESETUP_DB/port=', line: 'OVESETUP_DB/port=int:{{ ovirt_engine_db_port }}' }
+    - { regexp: '^OVESETUP_DB/database=', line: 'OVESETUP_DB/database=str:{{ ovirt_engine_db_name }}' }
+    - { regexp: '^OVESETUP_CONFIG/applicationMode=', line: 'OVESETUP_CONFIG/applicationMode=str:{{ engine_application_mode }}' }
+    - { regexp: '^OVESETUP_CONFIG/storageType=', line: 'OVESETUP_CONFIG/storageType=str:{% if hosted_storage_type == 'fcp' %}fc{% elif hosted_storage_type == 'glusterfs' %}gluster{% else %}{{ hosted_storage_type }}{% endif %}{{ '' }}' }
+    - { regexp: '^OVESETUP_DWH_CORE/enable=', line: 'OVESETUP_DWH_CORE/enable=bool:True' }
+    - { regexp: '^OVESETUP_DWH_CONFIG/scale=', line: 'OVESETUP_DWH_CONFIG/scale=str:1' }
+    - { regexp: '^OVESETUP_DWH_CONFIG/dwhDbBackupDir=', line: 'OVESETUP_DWH_CONFIG/dwhDbBackupDir=str:/var/lib/ovirt-engine-dwh/backups' }
+    - { regexp: '^OVESETUP_DWH_DB/restoreBackupLate=', line: 'OVESETUP_DWH_DB/restoreBackupLate=bool:True' }
+    - { regexp: '^OVESETUP_DWH_DB/disconnectExistingDwh=', line: 'OVESETUP_DWH_DB/disconnectExistingDwh=none:None' }
+    - { regexp: '^OVESETUP_DWH_DB/performBackup=', line: 'OVESETUP_DWH_DB/performBackup=none:None' }
+    - { regexp: '^OVESETUP_DWH_DB/host=', line: 'OVESETUP_DWH_DB/host=str:{{ ovirt_engine_dwh_db_host }}' }
+    - { regexp: '^OVESETUP_DWH_DB/user=', line: 'OVESETUP_DWH_DB/user=str:{{ ovirt_engine_dwh_db_user }}' }
+    - { regexp: '^OVESETUP_DWH_DB/password=', line: 'OVESETUP_DWH_DB/password=str:{{ ovirt_engine_dwh_db_password }}' }
+    - { regexp: '^OVESETUP_DWH_DB/port=', line: 'OVESETUP_DWH_DB/port=int:{{ ovirt_engine_dwh_db_port }}' }
+    - { regexp: '^OVESETUP_DWH_DB/database=', line: 'OVESETUP_DWH_DB/database=str:{{ ovirt_engine_dwh_db_name }}' }
+  loop_control:
+    loop_var: line_to_replace

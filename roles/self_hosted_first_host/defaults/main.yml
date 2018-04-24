@@ -2,6 +2,7 @@
 
 # self-hosted-answers
 engine_fqdn: ovirt-engine.example.com
+engine_domain: "{{ engine_fqdn.split('.')[1:] | join('.') }}"
 engine_vm_ram: "{{ 4096 if compatibility_version < 4.1 else 16384 }}"
 engine_vm_cpus: "{{ 2 if compatibility_version < 4.1 else 4 }}"
 engine_setup_timeout: 3600
@@ -10,6 +11,7 @@ interface_name: '{{ ansible_default_ipv4.interface }}'
 cluster_name: Default
 storage_datacenter_name: hosted_storage
 hosted_storage_type: nfs
+nfs_storage_version: v3
 storage_domain_type: "{{ 'nfs3' if hosted_storage_type == 'nfs' else 'glusterfs' if hosted_storage_type == 'gluster' else 'fc' if hosted_storage_type == 'fcp' else hosted_storage_type }}"
 hosted_storage_name: my_hosted_storage
 hosted_storage_address: localhost
@@ -21,10 +23,11 @@ hosted_iscsi_portal_port: 3260
 hosted_iscsi_portal_ip_address: '{{ hosted_storage_address }}'
 vm_timezone: America/New_York
 
+ansible_deploy: "{{ true if compatibility_version > 4.1 else false }}"
 engine_vm_static_net_address: ''
 engine_vm_static_inet_name: eth0
 engine_vm_static_inet_file_path: /etc/sysconfig/network-scripts/ifcfg-{{ engine_vm_static_inet_name }}
-engine_vm_static_net_dns_list: '{{ ansible_dns.nameservers }}'
+engine_vm_static_net_dns_list: '{{ ansible_dns.nameservers | join(",") if ansible_deploy else ansible_dns.nameservers }}'
 engine_vm_static_net_domain: '{{ ansible_domain }}'
 engine_vm_static_net_network: '{{ ansible_default_ipv4.network }}'
 engine_vm_static_net_netmask: '{{ ansible_default_ipv4.netmask }}'
@@ -42,6 +45,7 @@ compatibility_version: 4.0
 # product stand for decide to install ovirt/rhv appliance
 product: ovirt
 package_name: "{{ 'rhevm-appliance' if compatibility_version < 4.1 else 'rhvm-appliance' }}"
+root_ssh_pubkey: ''
 ssh_authorized_keys: []
 engine_application_mode: virt
 engine_organization: localdomain

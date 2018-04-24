@@ -1,7 +1,7 @@
 ---
 
 - name: Install dependences (~2GB)
-  yum: name={{ item }} state=present
+  yum: name={{ package_to_install }} state=present
   with_items:
       - genisoimage
       - '{{ "ovirt-engine-appliance" if product == "ovirt" else package_name }}'
@@ -9,6 +9,8 @@
       - ovirt-hosted-engine-setup
   async: 7200
   poll: 5
+  loop_control:
+    loop_var: package_to_install
   tags:
     - packages
 
@@ -47,21 +49,6 @@
   tags:
     - setup
 
-- name: Find the path to the appliance image
-  shell: find /usr/share/ovirt-engine-appliance -name '*-appliance-*.ova'
-  register: engine_appliance
-  tags:
-    - setup
-
-- block:
-  - name: Copy authorised ssh keys from the hypervisor
-    command: cat ~/.ssh/authorized_keys
-    register: hypervisor_authorized_keys
-
-  - name: Set authorized ssh key if not provided
-    set_fact: ssh_authorized_keys={{ hypervisor_authorized_keys.stdout_lines }}
-  when: ssh_authorized_keys == []
-
 - name: create config directory
   file:
       path: '{{ config_dir }}'
@@ -69,6 +56,13 @@
       mode: 0700
       owner: qemu
       group: qemu
+
+  tags:
+    - setup
+
+- name: Find the path to the appliance image
+  shell: find /usr/share/ovirt-engine-appliance -name '*-appliance-*.ova'
+  register: engine_appliance
   tags:
     - setup
 
@@ -80,44 +74,57 @@
   tags:
     - setup
 
-- name: Create cloud init temp directory
-  file:
-      path: '{{ config_dir }}/cloud_init'
-      state: directory
-      mode: 0700
-      owner: qemu
-      group: qemu
-  tags:
-    - setup
+- when: not ansible_deploy
+  block:
+  - when: ssh_authorized_keys == []
+    block:
+    - name: Copy authorised ssh keys from the hypervisor
+      command: cat ~/.ssh/authorized_keys
+      register: hypervisor_authorized_keys
 
-- name: Copy over the cloud init data
-  template:
-      src: '{{ item.src }}'
-      dest: '{{ item.dest }}'
-      owner: qemu
-      group: qemu
-      mode: 0600
-  with_items:
-    - { src: user-data.j2, dest: '{{ config_dir }}/cloud_init/user-data' }
-    - { src: meta-data.j2, dest: '{{ config_dir }}/cloud_init/meta-data' }
-  tags:
-    - setup
+    - name: Set authorized ssh key if not provided
+      set_fact: ssh_authorized_keys={{ hypervisor_authorized_keys.stdout_lines }}
 
-- name: Generate cloud-init iso
-  shell: |
-    genisoimage -output '{{ config_dir }}/cloud_init/cloud.iso' -volid cidata -joliet -rock -input-charset utf-8  '{{ config_dir }}/cloud_init/meta-data' '{{ config_dir }}/cloud_init/user-data'
-  tags:
-    - setup
+  - name: Create cloud init temp directory
+    file:
+        path: '{{ config_dir }}/cloud_init'
+        state: directory
+        mode: 0700
+        owner: qemu
+        group: qemu
+    tags:
+      - setup
 
-- name: Fix permissions on iso
-  file:
-      name: '{{ config_dir }}/cloud_init/cloud.iso'
-      group: qemu
-      owner: qemu
-      state: file
-      mode: 0600
-  tags:
-    - setup
+  - name: Copy over the cloud init data
+    template:
+        src: '{{ cloud_init_file.src }}'
+        dest: '{{ cloud_init_file.dest }}'
+        owner: qemu
+        group: qemu
+        mode: 0600
+    with_items:
+      - { src: user-data.j2, dest: '{{ config_dir }}/cloud_init/user-data' }
+      - { src: meta-data.j2, dest: '{{ config_dir }}/cloud_init/meta-data' }
+    loop_control:
+      loop_var: cloud_init_file
+    tags:
+      - setup
+
+  - name: Generate cloud-init iso
+    shell: |
+      genisoimage -output '{{ config_dir }}/cloud_init/cloud.iso' -volid cidata -joliet -rock -input-charset utf-8  '{{ config_dir }}/cloud_init/meta-data' '{{ config_dir }}/cloud_init/user-data'
+    tags:
+      - setup
+
+  - name: Fix permissions on iso
+    file:
+        name: '{{ config_dir }}/cloud_init/cloud.iso'
+        group: qemu
+        owner: qemu
+        state: file
+        mode: 0600
+    tags:
+      - setup
 
 - name: check if the setup has already run
   command: systemctl status ovirt-ha-agent
@@ -126,9 +133,16 @@
   failed_when: false
   ignore_errors: yes
 
+- name: Copy the ansible file which inject details into the heanswer file
+  template:
+      src: enginevm_before_engine_setup.yml.j2
+      dest: '/usr/share/ovirt-hosted-engine-setup/ansible/hooks/enginevm_before_engine_setup/enginevm_before_engine_setup.yml'
+      mode: 0644
+  when: ansible_deploy
+
 - name: Execute hosted-engine setup
   shell: |
-    hosted-engine --deploy --config-append={{ config_dir }}/answers{{ "" if compatibility_version < 4.2 else " --noansible" }}
+    hosted-engine --deploy --config-append={{ config_dir }}/answers {{ '--config-append=/root/heanswers.conf' if ansible_deploy else '' if compatibility_version < 4.2 else '--noansible' }}
   async: 12000
   poll: 5
   when: installed.rc > 0
