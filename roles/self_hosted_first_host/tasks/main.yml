@@ -141,10 +141,9 @@
   when: ansible_deploy
 
 - name: Execute hosted-engine setup
-  shell: |
-    hosted-engine --deploy --config-append={{ config_dir }}/answers {{ '--config-append=/root/heanswers.conf' if ansible_deploy else '' if compatibility_version < 4.2 else '--noansible' }}
-  async: 12000
-  poll: 5
+  shell: "hosted-engine --deploy --config-append={{ config_dir }}/answers{{
+    ' --config-append=/root/heanswers.conf' if ansible_deploy else '' if
+    compatibility_version < 4.2 else ' --noansible' }}"
   when: installed.rc > 0
   tags:
     - install
