@@ -136,7 +136,7 @@
 - name: Copy the ansible file which inject details into the heanswer file
   template:
       src: enginevm_before_engine_setup.yml.j2
-      dest: '/usr/share/ovirt-hosted-engine-setup/ansible/hooks/enginevm_before_engine_setup/enginevm_before_engine_setup.yml'
+      dest: "{{ ansible_deploy_hook_path }}/enginevm_before_engine_setup.yml"
       mode: 0644
   when: ansible_deploy
 
