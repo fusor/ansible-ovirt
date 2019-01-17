@@ -9,6 +9,7 @@ engine_setup_timeout: 3600
 gateway: '{{ ansible_default_ipv4.gateway }}'
 interface_name: '{{ ansible_default_ipv4.interface }}'
 cluster_name: Default
+dc_name: Default
 storage_datacenter_name: hosted_storage
 hosted_storage_type: nfs
 nfs_storage_version: v3
