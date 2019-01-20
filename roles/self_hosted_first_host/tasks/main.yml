@@ -133,18 +133,24 @@
   failed_when: false
   ignore_errors: yes
 
-- name: Copy the ansible file which inject details into the heanswer file
+- name: Copy the ansible file which inject details into the answers file
   template:
       src: enginevm_before_engine_setup.yml.j2
       dest: "{{ ansible_deploy_hook_path }}/enginevm_before_engine_setup.yml"
       mode: 0644
   when: ansible_deploy
 
-- name: Execute hosted-engine setup
+- name: Execute hosted-engine setup for version < 4.3
   shell: "hosted-engine --deploy --config-append={{ config_dir }}/answers{{
     ' --config-append=/root/heanswers.conf' if ansible_deploy else '' if
     compatibility_version < 4.2 else ' --noansible' }}"
-  when: installed.rc > 0
+  when: installed.rc > 0 and compatibility_version < 4.3
+  tags:
+    - install
+
+- name: Execute hosted-engine setup for version >= 4.3
+  shell: "hosted-engine --deploy --config-append={{ config_dir }}/answers"
+  when: installed.rc > 0 and compatibility_version >= 4.3
   tags:
     - install
 

@@ -1,7 +1,7 @@
 ---
-- name: Update the heanswer.conf file with our parameters
+- name: Update the answer file with our parameters
   lineinfile:
-    dest: /root/heanswers.conf
+    dest: "/root/{{ 'heanswers.conf' if compatibility_version < 4.3 else 'ovirt-engine-answers' }}"
     regexp: "{{ '{{' }} line_to_replace.regexp {{ '}}' }}"
     line: "{{ '{{' }} line_to_replace.line {{ '}}' }}"
   with_items:
@@ -28,3 +28,6 @@
     - { regexp: '^OVESETUP_DWH_DB/database=', line: 'OVESETUP_DWH_DB/database=str:{{ ovirt_engine_dwh_db_name }}' }
   loop_control:
     loop_var: line_to_replace
+{% if compatibility_version >= 4.3 %}
+  delegate_to: "{{ groups['self_hosted_engine'][0] }}"
+{% endif %}
