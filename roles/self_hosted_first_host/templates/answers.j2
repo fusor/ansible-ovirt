@@ -36,6 +36,9 @@ OVEHOSTED_STORAGE/glusterProvisioningEnabled=bool:False
 OVEHOSTED_STORAGE/glusterBrick=none:None
 {% endif %}
 OVEHOSTED_STORAGE/storageDomainName=str:{{ hosted_storage_name }}
+{% if hosted_storage_size_gb is defined %}
+OVEHOSTED_STORAGE/imgSizeGB=str:{{ hosted_storage_size_gb }}
+{% endif %}
 OVEHOSTED_VDSM/consoleType=str:vnc
 OVEHOSTED_VM/vmMemSizeMB=int:{{ engine_vm_ram }}
 OVEHOSTED_VM/vmVCpus=str:{{ engine_vm_cpus }}
