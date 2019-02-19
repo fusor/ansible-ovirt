@@ -9,6 +9,12 @@ OVEHOSTED_NETWORK/fqdn=str:{{ engine_fqdn }}
 OVEHOSTED_NETWORK/bridgeName=str:ovirtmgmt
 OVEHOSTED_NETWORK/bridgeIf=str:{{ interface_name }}
 OVEHOSTED_NETWORK/gateway=str:{{ gateway }}
+{% if he_force_ip4 is defined %}
+OVEHOSTED_NETWORK/forceIPv4=bool:True
+{% endif %}
+{% if he_force_ip6 is defined %}
+OVEHOSTED_NETWORK/forceIPv6=bool:True
+{% endif %}
 OVEHOSTED_ENGINE/insecureSSL=none:None
 OVEHOSTED_ENGINE/clusterName=str:{{ cluster_name }}
 OVEHOSTED_ENGINE/datacenterName=str:{{ dc_name }}
