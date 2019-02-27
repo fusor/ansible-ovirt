@@ -26,6 +26,7 @@
     - { regexp: '^OVESETUP_DWH_DB/password=', line: 'OVESETUP_DWH_DB/password=str:{{ ovirt_engine_dwh_db_password }}' }
     - { regexp: '^OVESETUP_DWH_DB/port=', line: 'OVESETUP_DWH_DB/port=int:{{ ovirt_engine_dwh_db_port }}' }
     - { regexp: '^OVESETUP_DWH_DB/database=', line: 'OVESETUP_DWH_DB/database=str:{{ ovirt_engine_dwh_db_name }}' }
+    - { regexp: '^QUESTION/1/ovirt-cinderlib-enable=', line: 'QUESTION/1/ovirt-cinderlib-enable=str:{{ ovirt_engine_cinderlib_enable | default(false) | ternary("yes", "no") }}' }
   loop_control:
     loop_var: line_to_replace
 {% if compatibility_version >= 4.3 %}
