@@ -40,6 +40,11 @@ engine_vm_static_net_netmask: '{{ ansible_default_ipv4.netmask }}'
 engine_vm_static_net_broadcast: '{{ ansible_default_ipv4.broadcast }}'
 engine_vm_static_net_gateway: '{{ ansible_default_ipv4.gateway }}'
 
+# in case of dual stack environment we can force ONE of the below keys
+# relevant for compatibility_version >= 4.3
+he_force_ip4: false
+he_force_ip6: false
+
 engine_mac_address: '00:11:22:33:44:55'
 cpu_model: model_Nehalem
 root_password: changeme
