@@ -149,7 +149,7 @@
     - install
 
 - name: Execute hosted-engine setup for version >= 4.3
-  shell: "hosted-engine --deploy --config-append={{ config_dir }}/answers"
+  shell: "hosted-engine --deploy {{ '--4' if he_force_ip4 else '--6' if he_force_ip6 else '' }} --config-append={{ config_dir }}/answers"
   when: installed.rc > 0 and compatibility_version >= 4.3
   tags:
     - install
