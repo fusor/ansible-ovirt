@@ -31,6 +31,7 @@ ansible_deploy_hook_path: "{{ '/usr/share/ovirt-hosted-engine-setup/ansible/hook
   if compatibility_version < 4.3 else
   '/usr/share/ansible/roles/oVirt.hosted-engine-setup/hooks/enginevm_before_engine_setup' }}"
 engine_vm_static_net_address: ''
+engine_vm_static_net_address_prefix: ''
 engine_vm_static_inet_name: eth0
 engine_vm_static_inet_file_path: /etc/sysconfig/network-scripts/ifcfg-{{ engine_vm_static_inet_name }}
 engine_vm_static_net_dns_list: '{{ ansible_dns.nameservers | join(",") if ansible_deploy else ansible_dns.nameservers }}'
