@@ -10,8 +10,8 @@ OVEHOSTED_NETWORK/bridgeName=str:ovirtmgmt
 OVEHOSTED_NETWORK/bridgeIf=str:{{ interface_name }}
 OVEHOSTED_NETWORK/gateway=str:{{ gateway }}
 OVEHOSTED_ENGINE/insecureSSL=none:None
-OVEHOSTED_ENGINE/clusterName=str:{{ cluster_name }}
-OVEHOSTED_ENGINE/datacenterName=str:{{ dc_name }}
+OVEHOSTED_ENGINE/clusterName=str:{{ cluster_name if compatibility_version > 4.1 else 'Default' }}
+OVEHOSTED_ENGINE/datacenterName=str:{{ dc_name if compatibility_version > 4.1 else 'Default' }}
 OVEHOSTED_STORAGE/storageDatacenterName=str:{{ storage_datacenter_name }}
 OVEHOSTED_STORAGE/domainType=str:{{ storage_domain_type }}
 {% if hosted_storage_type in ('iscsi', 'fcp', 'fc') %}
